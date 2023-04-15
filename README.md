@@ -52,7 +52,7 @@ With all our data properly on our structs, the ``executer`` has all the necessar
 
 ### Control characters (Ctrl + key)
 
-Reading the Ctrl+key combination should work by detecting control characters `^C`, `^D` and `^\` from the input.
+The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` and `SIGQUIT` signals from terminal. Detecting `Ctrl-D` input is still a mystery 😧
 
 ##### When prompt is active:
 `Ctrl-C` should display empty prompt in a new line
