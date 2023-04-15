@@ -19,7 +19,8 @@ We split the input string into an array of strings i.e tokens.
 
 ### Expander and quote handler
 
-Expanding environment variables with $ followed by characters
+Expanding environment variables with $ followed by characters.
+
 `$?` expands to the exit status of the most recently executed foreground pipeline.
 
 ### Parser
