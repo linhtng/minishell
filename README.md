@@ -41,6 +41,15 @@ pid
 ### Executor
 With all our data properly on our structs, the ``executer`` has all the necessary information to execute commands. For this part we use separate processess to execute either our builtins or other commands inside child processes that redirect ``stdin`` and ``stdout`` just like on pipex.
 
+### Built-in commands
+- `echo` prints arguments followed by newline, with option `-n` prints arguments without a newline
+- `cd` changes current directory to relative or absolute path passed as an argument
+- `pwd` prints full path of the current directory
+- `export` sets an environment variable passed as an argument, with no arguments it usually prints list of exported variables similar to `env`
+- `unset` remove environment variable passed as an argument
+- `env` prints list of exported environment variables
+- `exit` exits the shell
+
 ### Control characters (Ctrl + key)
 
 Reading the Ctrl+key combination should work by detecting control characters `^C`, `^D` and `^\` from the input.
