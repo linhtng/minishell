@@ -40,3 +40,21 @@ pid
 
 ### Executor
 With all our data properly on our structs, the ``executer`` has all the necessary information to execute commands. For this part we use separate processess to execute either our builtins or other commands inside child processes that redirect ``stdin`` and ``stdout`` just like on pipex.
+
+### Control characters (Ctrl + key)
+
+Reading the Ctrl+key combination should work by detecting control characters `^C`, `^D` and `^\` from the input.
+
+##### When prompt is active:
+`Ctrl-C` should display empty prompt in a new line
+
+`Ctrl-D` exits the shell
+
+`Ctrl-\` does nothing
+
+##### When subprocess is running:
+`Ctrl-C` sends SIGINT to the subprocess
+
+`Ctrl-D` sends EOF marker to the subprocess (there is no UNIX signal for this, but sending EOT character to the subprocess via STDIN seems to be enough: https://askubuntu.com/questions/724990/what-is-eof-and-how-to-trigger-it)
+
+`Ctrl-\` sends SIGQUIT to the subprocess
