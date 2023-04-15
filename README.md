@@ -6,6 +6,7 @@ Seems to be as simple as:
 input = readline("prompt");
 add_history(input);
 ```
+A zero-length input shoud not be added to history.
 
 ### Lexer
 In a shell, a lexer (short for "lexical analyzer") is a component of the shell's parser that breaks down a user's input into a series of tokens or lexemes.
