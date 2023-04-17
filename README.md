@@ -6,18 +6,50 @@ Seems to be as simple as:
 input = readline("prompt");
 add_history(input);
 ```
+The line `readline` returns is allocated with `malloc()`; you should `free()` the line when you are done with it. The line returned has the final newline removed, so only the text remains.
+
+If `readline` encounters an EOF (Ctrl + D) while reading the line, and the line is empty at that point, then (char *)NULL is returned. Otherwise, the line is ended just as if a newline \n had been typed.
+
 A zero-length input shoud not be added to history.
+
+The history can be freed calling `void rl_clear_history (void)`.
 
 ### Lexer
 In a shell, a lexer (short for "lexical analyzer") is a component of the shell's parser that breaks down a user's input into a series of tokens or lexemes.
 
-The lexer takes the user's input, which is typically a string of characters, and breaks it down into a series of smaller pieces or tokens that are more easily processed by the shell's parser. For example, the lexer may break down the input "ls -l /usr/bin" into the following tokens:
+The lexer takes the user's input, which is typically a string of characters, and breaks it down into a series of smaller pieces or tokens that are more easily processed by the shell's parser. For example, the lexer may break down the input `"echo "hello  $USER " > file | grep h | cat << eof | cat >> file | echo 'done $USER'"` into the following tokens:
 
-Token 1: "ls"
+`echo`: a command that prints its arguments to the standard output.
 
-Token 2: "-l"
+`"hello $USER "`: a double-quoted string that contains the string "hello " and the value of the environment variable $USER.
 
-Token 3: "/usr/bin"
+`>`: a redirection operator that redirects the standard output of the previous command to a file named file.
+
+`|`: a pipe operator that connects the standard output of the previous command to the standard input of the next command.
+
+`grep`: a command that searches for a pattern in its input and prints the matching lines to its standard output.
+
+`h`: a string that represents the pattern to search for.
+
+`|`: a pipe operator that connects the standard output of the previous command to the standard input of the next command.
+
+`cat`: a command that concatenates files and prints the result to its standard output.
+
+`<<`: a here-document operator that allows the input of multiple lines until a delimiter (eof in this case) is encountered.
+
+`eof`: the delimiter for the here-document.
+
+`|`: a pipe operator that connects the standard output of the previous command to the standard input of the next command.
+
+`cat`: a command that concatenates files and prints the result to its standard output.
+
+`>>`: a redirection operator that appends the standard output of the previous command to the end of the file named file.
+
+`|`: a pipe operator that connects the standard output of the previous command to the standard input of the next command.
+
+`echo`: a command that prints its arguments to the standard output.
+
+`'done $USER'`: a single-quoted string that contains the string 'done $USER', the environment variable $USER doesn't expand within ''.
 
 Each token corresponds to a distinct component of the user's command, such as the command name, arguments, and options.
 We split the input string into an array of strings i.e tokens.
@@ -32,15 +64,25 @@ Expanding environment variables with $ followed by characters.
 
 The parser is responsible for analyzing the command-line input and creating a data structure that represents the syntax of the input.
 For us, parsing is the process of turning the 2D array of tokens into a linked list of command nodes. Each command node is a struct that consists data to pass to the executor.
-Data needed:
+Command linked list could be like:
 ```
-command
-path
-args
-input_fd
-output_fd
-pid
-
+cmds:
+	cmd 1:
+		infile: 0 (default)
+		outfile: pipe1[1]
+		path: echo
+		full_cmd: {echo, hello  $USER , NULL}
+	cmd 2:
+		infile: pipe1[0] (read output of previous command)
+		outfile: pipe2[1]
+		path: grep
+		full_cmd: {grep, h, NULL}
+	cmd 3:
+		infile: pipe2[0] (read output of previous command)
+		outfile: pipe3[1]
+		path: cat
+		full_cmd: {grep, <<, eof, NULL}
+    
 ```
 
 ### Executor
