@@ -98,6 +98,8 @@ cmds:
 ### Executor
 With all our data properly on our structs, the ``executer`` has all the necessary information to execute commands. For this part we use separate processess to execute either our builtins or other commands inside child processes that redirect ``stdin`` and ``stdout`` just like on pipex.
 
+In cases of error, we must return the correct exit code: https://tldp.org/LDP/abs/html/exitcodes.html
+
 ### Built-in commands
 - `echo` prints arguments followed by newline, with option `-n` prints arguments without a newline
 - `cd` changes current directory to relative or absolute path passed as an argument
