@@ -14,7 +14,10 @@ NAME = minishell
 
 CFLAGS = -Wall -Wextra -Werror -g3
 
-SRC = prompt.c
+SRC = minishell.c \
+	lexer.c \
+	lexer_spl_quote.c \
+	lexer_utils.c \
 
 OBJSFD 	= objs
 
