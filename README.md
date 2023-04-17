@@ -64,7 +64,7 @@ Expanding environment variables with $ followed by characters.
 
 The parser is responsible for analyzing the command-line input and creating a data structure that represents the syntax of the input.
 For us, parsing is the process of turning the 2D array of tokens into a linked list of command nodes. Each command node is a struct that consists data to pass to the executor.
-Command linked list could be like:
+For the above example `"echo "hello  $USER " > file | grep h | cat << eof | cat >> file | echo 'done   $USER'"`, command linked list could be like:
 ```
 cmds:
 	cmd 1:
@@ -82,8 +82,18 @@ cmds:
 		outfile: pipe3[1]
 		path: cat
 		full_cmd: {grep, <<, eof, NULL}
-    
+	cmd 4:
+		infile: pipe3[0] (read output of previous command)
+		outfile: fd[3] i.e. fd corresponding to the open file 'file'
+		path: cat
+		full_cmd: {grep, >>, file, NULL}
+	cmd 5:
+		infile: fd[3] (read output of previous command)
+		outfile: 1
+		path: echo
+		full_cmd: {echo, done   $USER, NULL}
 ```
+
 
 ### Executor
 With all our data properly on our structs, the ``executer`` has all the necessary information to execute commands. For this part we use separate processess to execute either our builtins or other commands inside child processes that redirect ``stdin`` and ``stdout`` just like on pipex.
