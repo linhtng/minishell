@@ -134,3 +134,5 @@ wip_0: lexer split the input lines into a 2D array of token, handle ' and "
 <img width="702" alt="0417_progress" src="https://user-images.githubusercontent.com/33163654/232571562-09b20744-a786-41a4-be1b-b4822a5804c6.png">
 
 Next step: environment variable expansion. Maybe instead of 2D array, a linked list is better to store the tokens into, so you could save the in and out of single/double quote status.
+
+Also made some progress with handling ctrl+key combinations, but as I learned in minitalk, the unix signal handling is very messy and therefore some problems remain. Hoping to get this sorted next day, and push sample code to the repo.
