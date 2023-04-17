@@ -119,8 +119,8 @@ The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` an
 `Ctrl-\` does nothing
 
 ##### When subprocess is running:
-`Ctrl-C` sends SIGINT to the subprocess
+`Ctrl-C` sends SIGINT to the subprocess, exit code should be `130`
 
 `Ctrl-D` sends EOF marker to the subprocess (there is no UNIX signal for this, but sending EOT character to the subprocess via STDIN seems to be enough: https://askubuntu.com/questions/724990/what-is-eof-and-how-to-trigger-it)
 
-`Ctrl-\` sends SIGQUIT to the subprocess
+`Ctrl-\` sends SIGQUIT to the subprocess, exit code should be `131`
