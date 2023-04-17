@@ -126,3 +126,11 @@ The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` an
 `Ctrl-D` sends EOF marker to the subprocess (there is no UNIX signal for this, but sending EOT character to the subprocess via STDIN seems to be enough: https://askubuntu.com/questions/724990/what-is-eof-and-how-to-trigger-it)
 
 `Ctrl-\` sends SIGQUIT to the subprocess, exit code should be `131`
+
+---
+#### Progress 17.04.23
+wip_0: lexer split the input lines into a 2D array of token, handle ' and "
+
+<img width="702" alt="0417_progress" src="https://user-images.githubusercontent.com/33163654/232571562-09b20744-a786-41a4-be1b-b4822a5804c6.png">
+
+Next step: environment variable expansion. Maybe instead of 2D array, a linked list is better to store the tokens into, so you could save the in and out of single/double quote status.
