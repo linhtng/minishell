@@ -107,7 +107,7 @@ In cases of error, we must return the correct exit code: https://tldp.org/LDP/ab
 - `export` sets an environment variable passed as an argument, with no arguments it usually prints list of exported variables similar to `env`
 - `unset` remove environment variable passed as an argument
 - `env` prints list of exported environment variables
-- `exit` exits the shell
+- `exit` exits the shell, it accepts number between 0-255 as an ergument that specifies the exit status code.
 
 ### Control characters (Ctrl + key)
 
