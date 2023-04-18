@@ -136,3 +136,11 @@ wip_0: lexer split the input lines into a 2D array of token, handle ' and "
 Next step: environment variable expansion. Maybe instead of 2D array, a linked list is better to store the tokens into, so you could save the in and out of single/double quote status.
 
 Also made some progress with handling ctrl+key combinations, but as I learned in minitalk, the unix signal handling is very messy and therefore some problems remain. Hoping to get this sorted next day, and push sample code to the repo.
+
+---
+#### Progress 18.04.23
+Pushed signal and builtin command test shells to `wip_joonas` branch.
+
+Signals (i.e. ctrl+key commands) still have some problems. Currently everything seems to work correctly for child processes, but on the shell prompt only Ctrl+D should work perfectly.
+
+Implemented `exit`, `pwd` and `cd` builtins in the builtin test shell. They should work perfectly, but `cd` should still need some final touches once the minishell's environment variable handling is complete (more details in code).
