@@ -64,9 +64,22 @@ int	ft_is_dir(const char *path)
 
 
 // exit builtin
-void	exit_shell()
+void	exit_shell(char *n)
 {
-	exit(0);
+	int	status;
+
+	status = 0;
+	ft_putstr_fd("exit\n", 1);
+	if (n)
+	{
+		if (!ft_isnumstr(n))
+		{
+			ft_printf("exit: %s: numeric argument required\n", n);
+			exit(255);
+		}
+		status = (unsigned char)ft_atoi(n);
+	}
+	exit(status);
 }
 
 // pwd builtin
@@ -129,7 +142,7 @@ int main(int argc, char **argv)
 		if (!input)
 		{
 			ft_putchar_fd('\n', 1);
-			exit_shell();
+			exit(0);
 		}
 	//	ft_printf("input was %s\n", input);
 
@@ -139,7 +152,12 @@ int main(int argc, char **argv)
 
 			command = "exit";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
-				exit_shell();
+			{
+				if (ft_strlen(input) == ft_strlen(command))
+					exit_shell(NULL);
+				else
+					exit_shell(input + 5);
+			}
 
 			command = "pwd";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
