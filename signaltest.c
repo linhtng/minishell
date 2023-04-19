@@ -25,7 +25,10 @@ int main(int argc, char **argv)
 	pid_t	child;
 	int		status;
 
-		ft_putstr_fd("signals test shell\n", 1);
+	(void)argc;
+	(void)argv;
+
+	ft_putstr_fd("signals test shell\n", 1);
 
 /*  	struct sigaction	sigact;
 	sigact.sa_sigaction = sig_handler;
