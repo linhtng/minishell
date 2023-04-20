@@ -149,3 +149,12 @@ Implemented `exit`, `pwd` and `cd` builtins in the builtin test shell. They shou
 #### Progress 19.04.23
 
 In `wip_joonas`: added basic environment variable parsing from `main()`'s `**envp` argument into a linked list. Added `echo` and `env` builtins, and some tweaks to the existing builtins.
+
+#### Progress 20.04.23
+
+In `wip_0`: fixed the lexer's tokennization split to handle banana string like:
+`echo hello he"l  l"o0 'he "l l" o1' "he"  ll"o2" "   "he"ll "o3 he "l l "o4 "" ' ' he" ll "o5 he "l l"o6 ' '`
+
+`echo hello he"ll"o0 'he"ll"o1' "he"ll"o2" ""he"ll"o3 he"ll"o4"" ''he"ll"o5 he"ll"o6''`
+
+Next: properly save those tokens into the linked list.
