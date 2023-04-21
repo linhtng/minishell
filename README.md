@@ -137,7 +137,6 @@ Next step: environment variable expansion. Maybe instead of 2D array, a linked l
 
 Also made some progress with handling ctrl+key combinations, but as I learned in minitalk, the unix signal handling is very messy and therefore some problems remain. Hoping to get this sorted next day, and push sample code to the repo.
 
----
 #### Progress 18.04.23
 Pushed signal and builtin command test shells to `wip_joonas` branch.
 
@@ -145,7 +144,6 @@ Signals (i.e. ctrl+key commands) still have some problems. Currently everything 
 
 Implemented `exit`, `pwd` and `cd` builtins in the builtin test shell. They should work perfectly, but `cd` should still need some final touches once the minishell's environment variable handling is complete (more details in code).
 
----
 #### Progress 19.04.23
 
 In `wip_joonas`: added basic environment variable parsing from `main()`'s `**envp` argument into a linked list. Added `echo` and `env` builtins, and some tweaks to the existing builtins.
@@ -158,3 +156,8 @@ In `wip_0`: fixed the lexer's tokennization split to handle banana string like:
 `echo hello he"ll"o0 'he"ll"o1' "he"ll"o2" ""he"ll"o3 he"ll"o4"" ''he"ll"o5 he"ll"o6''`
 
 Next: properly save those tokens into the linked list.
+
+#### Progress 21.04.23
+
+In `wip_joonas`, all builtins working. Some still require minor tweaks, noted in the code comments.
+Some further work on environment variables, but it should be fully working and editable with builtin commands and the helper functions. Remaining items detailed in code comments.
