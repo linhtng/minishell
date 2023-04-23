@@ -6,7 +6,7 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:56:20 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/04/13 18:58:23 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:48:28 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,33 @@ typedef struct s_spldata
 	size_t	slen;
 }	t_spldata;
 
+enum	e_token_types
+{
+	WORD,
+	SPACE,
+	PIPE,
+	INPUT,
+	OUTPUT_APP,
+	HERE_DOC,
+	OUTPUT_TRUNC,
+	NULL_CHAR,
+};
+
+enum	e_quote
+{
+	N_QUOTE,
+	IN_SQUOTE,
+	IN_DQUOTE,
+};
+
+typedef struct s_token
+{
+	char			*string;
+	int				len;
+	int				start_index;
+	int				type;
+}	t_token;
+
 typedef struct s_sh_data
 {
 	char	*input;
@@ -41,16 +68,16 @@ typedef struct s_sh_data
 void	launch_prompt(char *input);
 
 /* lexer */
-char	**token_split(char const *s, char c);
-
-/* lexer_spl_quote */
-int		count_with_quotes(char const *s, char const c, int quotes);
-char	**make_arr_quotes(char const*s, char c, int quotes);
-void	do_split_with_quotes(char **arr, char const *s, char c);
-int		free_arr_spl(char **arr, size_t n);
+int		lexer(char *input, t_list **tokens);
 
 /* lexer_utils */
-int	count_occurences(const char *str, char c);
-void	print_arr(char **arr);
+int		count_occurences(const char *str, char c);
+int		get_quote_status(char *input, int i, int status);
+int		token_type(char *input, int i);
+void	del_token(void *content);
+void	free_list(t_list *list);
+
+/* lexer_debug */
+void	print_tokens_list(t_list *list);
 
 #endif

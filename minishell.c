@@ -6,25 +6,15 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 19:01:49 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/04/13 19:45:31 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/04/23 19:37:54 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-char	**lexer(char *input)
-{
-	char	**tokens;
-
-	tokens = token_split(input, ' ');
-	if (!tokens)
-		return (NULL);
-	return (tokens);
-}
+#include "./includes/minishell.h"
 
 void	launch_prompt(char *input)
 {
-	char	**tokens;
+	t_list	*tokens;
 
 	tokens = NULL;
 	input = readline("minishell$  ");
@@ -32,9 +22,13 @@ void	launch_prompt(char *input)
 	{
 		if (*input)
 			add_history(input);
-		tokens = lexer(input);
+		if (lexer(input, &tokens))
+		{
+			print_tokens_list(tokens);
+			ft_lstclear(&tokens, del_token);
+			free_list(tokens);
+		}
 		free(input);
-		print_arr(tokens);
 		input = readline("minishell$  ");
 	}
 	if (!ft_strncmp(input, "exit", 5))

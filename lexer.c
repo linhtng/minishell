@@ -5,129 +5,104 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/17 16:36:51 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/04/17 19:42:10 by thuynguy         ###   ########.fr       */
+/*   Created: 2023/04/20 18:53:43 by thuynguy          #+#    #+#             */
+/*   Updated: 2023/04/23 19:46:47 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "./includes/minishell.h"
 
-int	word_count(char const *s, char const c)
+void	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {
-	int	count;
-	int	i;
+	char	*str_content;
+	t_token	*new_token;
 
-	count = 0;
-	i = 0;
-	while (*s != '\0')
+	str_content = ft_substr(input, token->start_index, token->len);
+	if (str_content)
 	{
-		if (*s == c)
-			i = 0;
-		if (*s != c && i == 0)
+		new_token = (t_token *) malloc(sizeof(t_token));
+		if (new_token)
 		{
-			count++;
-			i = 1;
+			new_token->string = str_content;
+			new_token->type = type;
+			new_token->start_index = token->start_index;
+			new_token->len = token->start_index;
+			ft_lstadd_back(tokens, ft_lstnew(new_token));
 		}
-		s++;
 	}
-	return (count);
 }
 
-char	**make_arr(char const*s, char c)
+int	save_token(char *input, int *i, t_token *token, t_list **token_lst)
 {
-	char	**res;
-	int		len;
+	int		type;
 
-	if (!s)
-		return (NULL);
-	len = word_count(s, c);
-	res = (char **) malloc(sizeof(char *) * (len + 1));
-	if (!res)
-		return (NULL);
-	res[len] = NULL;
-	return (res);
-}
-
-int	free_arr_spl(char **arr, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i <= n)
+	type = token_type(input, *i);
+	if (type != 0)
 	{
-		arr[i] = NULL;
-		free(arr[i]);
+		if (*i && token_type(input, *i - 1) == 0)
+		{
+			token->len = *i - token->start_index;
+			add_token_lst(token, input, WORD, token_lst);
+		}
+		else if (type != SPACE && type != NULL_CHAR)
+		{
+			if (type == HERE_DOC || type == OUTPUT_APP)
+				(*i)++;
+			token->len = *i - token->start_index + 1;
+			add_token_lst(token, input, type, token_lst);
+		}
+		token->start_index = *i + 1;
+	}
+	return (token->start_index);
+}
+
+t_list	*token_lst(char *input, int size)
+{
+	t_list	*tokens_lst;
+	t_token	*token;
+	int		i;
+	int		status;
+
+	token = (t_token *) malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	ft_bzero(token, sizeof(t_token));
+	token->string = NULL;
+	tokens_lst = NULL;
+	i = 0;
+	status = N_QUOTE;
+	while (i <= size)
+	{
+		status = get_quote_status(input, i, status);
+		if (status == N_QUOTE)
+			token->start_index = save_token(input, &i, token, &tokens_lst);
 		i++;
 	}
-	arr = NULL;
-	free(arr);
-	return (0);
+	free(token);
+	return (tokens_lst);
 }
 
-static int	do_split(char **arr, char const *s, char c)
+int	lexer(char *input, t_list **tokens)
 {
-	size_t		i;
-	int			j;
-	int			word_start;
-	size_t		slen;
+	int	len;
+	int	s_quote;
+	int	d_quote;
 
-	i = 0;
-	j = 0;
-	word_start = -1;
-	slen = ft_strlen(s);
-	while (i <= slen)
+	len = ft_strlen(input);
+	s_quote = count_occurences(input, '\'');
+	d_quote = count_occurences(input, '\"');
+	if ((s_quote && s_quote % 2 != 0) || (d_quote && d_quote % 2 != 0))
 	{
-		if (s[i] != '\0' && s[i] != c && word_start < 0)
-			word_start = i;
-		if ((s[i] == c || i == slen) && word_start >= 0)
-		{
-			arr[j] = ft_substr(s, word_start, i - word_start);
-			if (!arr[j])
-				return (free_arr_spl(arr, j));
-			j++;
-			word_start = -1;
-		}
-		i++;
+		printf("minishell$: unexpected EOF while looking for matching ");
+		if (s_quote % 2 != 0)
+			printf("`\'\'");
+		else
+			printf("`\"\'");
+		printf("\nminishell$: syntax error: unexpected end of file\n");
+		return (0);
 	}
-	return (j);
+	*tokens = token_lst(input, len);
+	if (!tokens)
+		return (0);
+	return (1);
 }
-
-char	**token_split(char const *s, char c)
-{
-	char	**arr;
-	int		in_quotes;
-	int		in_dquotes;
-
-	in_quotes = count_occurences(s, '\'');
-	in_dquotes = count_occurences(s, '\"');
-	if ((in_quotes && in_quotes % 2 == 0) || \
-			(in_dquotes && in_dquotes % 2 == 0))
-	{
-		arr = make_arr_quotes(s, c, in_quotes);
-		if (!arr)
-			return (NULL);
-		do_split_with_quotes(arr, s, c);
-	}
-	else
-	{
-		arr = make_arr(s, c);
-		if (!arr)
-			return (NULL);
-		do_split(arr, s, c);
-	}
-	return (arr);
-}
-
-/* int main(int arc, char **arv)
-{
-    char    **tokens;
-
-    tokens = NULL;
-	printf("%d\n", arc);
-    if (arc == 2)
-    {
-        tokens = lexer(arv[1]);
-        print_arr(tokens);
-    }
-    return (0);
-} */

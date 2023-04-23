@@ -15,9 +15,9 @@ NAME = minishell
 CFLAGS = -Wall -Wextra -Werror -g3
 
 SRC = minishell.c \
-	lexer.c \
-	lexer_spl_quote.c \
 	lexer_utils.c \
+	lexer.c \
+	lexer_debug.c \
 
 OBJSFD 	= objs
 
@@ -37,6 +37,7 @@ all: $(LIBFT) $(NAME)
 
 $(LIBFT):
 			make -C ./includes/libft
+			make bonus -C ./includes/libft
 
 $(OBJSFD):
 	mkdir $@
