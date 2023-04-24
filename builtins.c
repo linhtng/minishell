@@ -106,25 +106,6 @@ char	**parse_variable(char *str)
 	return (arr);
 }
 
-// parses environment from main's **envp argument into linked list,
-// that has the env variable stored as 2D array from ft_split
-// NOTE: Rememver to free the 2D array when not needed!
-//
-// FIXME: some variables (e.g. $_, $OLDPWD should be ignored probably)
-void	parse_env(t_list **env_list, char **envp)
-{
-	char **envvar;
-
-	while (*envp)
-	{
-		envvar = parse_variable(*envp);
-		if (!envvar)
-			exit(1);// TODO what to do in case of env parsing failure?????
-		ft_lstadd_back(env_list, ft_lstnew(envvar));
-		envp++;
-	}
-}
-
 // print full environment, including variables with no values
 int	print_full_env(t_list *env_list)
 {
@@ -170,16 +151,26 @@ t_list	*find_envvar(t_list **env_list, char *var)
 	return (lst);
 }
 
+// helper that frees the environment variable 2D array
+void	free_env_var(char **env_var)
+{
+	if (env_var[0])
+		free(env_var[0]);
+	if (env_var[1])
+		free(env_var[1]);
+	if (env_var)
+		free(env_var);
+}
+
+
 // helper to delete environment variable from the list
 void	del_envvar(t_list **env_list, t_list *var_node)
 {
 	t_list	*lst;
 	t_list	*prev;
-	char	**envvar;
 
 	lst = *env_list;
 	prev = NULL;
-	envvar = NULL;
 	while (lst)
 	{
 		if (lst == var_node)
@@ -188,10 +179,7 @@ void	del_envvar(t_list **env_list, t_list *var_node)
 				prev->next = lst->next;
 			else
 				*env_list = (*env_list)->next;
-			envvar = (char **)var_node->content;
-			free(envvar[0]);
-			free(envvar[1]);
-			free(envvar);
+			free_env_var((char **)var_node->content);
 			free(var_node);
 			return ;
 		}
@@ -200,16 +188,88 @@ void	del_envvar(t_list **env_list, t_list *var_node)
 	}
 }
 
+// clears the whole env list
+void	clear_env_list(t_list **env_list)
+{
+	t_list	*lst;
+
+	lst = *env_list;
+	while(lst)
+	{
+		free_env_var((char **)lst->content);
+		free(lst);
+		lst = lst->next;
+	}
+}
+
+// getenv() replacement
+char	*get_envvar(t_list **env_list, char *var)
+{
+	char	**envvar;
+
+	envvar = (char **)find_envvar(env_list, var)->content;
+	return (envvar[1]);
+}
+
+// parses environment from main's **envp argument into linked list,
+// that has the env variable stored as 2D array from ft_split
+// NOTE: Rememver to free the 2D array when not needed!
+//
+// FIXME: some variables (e.g. $_, $OLDPWD should be ignored probably)
+void	parse_env(t_list **env_list, char **envp)
+{
+	char **envvar;
+
+	while (*envp)
+	{
+		envvar = parse_variable(*envp);
+		if (!envvar)
+		{
+			clear_env_list(env_list);
+			exit(1);// TODO print error in case of env parsing failure?????
+		}
+		ft_lstadd_back(env_list, ft_lstnew(envvar));
+		envp++;
+	}
+}
+
+// convert env list to array to pass it to subprocesses via **envp argument
+// remember to free the list after sybprocesses finish
+char	**env_list_to_array(t_list *env_list)
+{
+	char	**envp;
+	char	**envvar;
+	char	**envptr;
+	size_t	len;
+
+	envp = (char **)malloc(sizeof(char *) * (ft_lstsize(env_list) + 1));
+	envptr = envp;
+	while(env_list)
+	{
+		envvar = (char **)env_list->content;
+		len = ft_strlen(envvar[0]) + ft_strlen(envvar[1]) + 2;
+		*envptr = (char *)malloc(len);
+		ft_strlcat(*envptr, envvar[0], len);
+		ft_strlcat(*envptr, "=", len);
+		ft_strlcat(*envptr, envvar[1], len);
+		env_list = env_list->next;
+		envptr++;
+	}
+	envptr = NULL;
+	return (envp);
+}
 
 
 /*************** BUILTINS ***************/
 
 // exit builtin
+// NOTE: only takes first element from argument array
 void	exit_shell(char *n)
 {
 	int	status;
 
 	status = 0;
+//	clear_env_list(env_list);//TODO needs env_list from somewhere
 	ft_putstr_fd("exit\n", 1);
 	if (n)
 	{
@@ -232,15 +292,16 @@ int	pwd()
 }
 
 // cd builtin
+// NOTE: only takes first element from argument array
+//
 // If no path is given, and $HOME environment variable is set, chdir to $HOME
 // If no path is given, and $HOME is not set, do nothing (untested)
 //
 //TODO
 // - make sure it works with path that have spaces, or other special characters
 // - make sure PWD and OLDPWD environment variable is updated
-// - should $HOME get pulled with getenv(), or do we have own environment within the shell??
 // - errors should be output to STDERR, so no ft_printf
-int	cd(char *path)
+int	cd(t_list **env_list, char *path)
 {
 	char	*home_dir;
 
@@ -258,7 +319,7 @@ int	cd(char *path)
 	}
 	else
 	{
-		home_dir = getenv("HOME");//FIXME get from minishell's "own" environment?????
+		home_dir = get_envvar(env_list, "HOME");
 		if (home_dir)
 			if (chdir(home_dir) == 0)
 				return (0);
@@ -267,23 +328,23 @@ int	cd(char *path)
 }
 
 // echo builtin
-int	echo(char **str)
+int	echo(char **args)
 {
 	int	n;
 
 	n = 0;
-	if (*str)
+	if (*args)
 	{
-		if (!ft_strncmp("-n", *str, 3))
+		if (!ft_strncmp("-n", *args, 3))
 		{
 			n = 1;
-			str++;
+			args++;
 		}
-		while (*str)
+		while (*args)
 		{
-			ft_putstr_fd(*str, 1);
-			str++;
-			if (*str)
+			ft_putstr_fd(*args, 1);
+			args++;
+			if (*args)
 				ft_putchar_fd(' ', 1);
 		}
 	}
@@ -310,43 +371,47 @@ int	print_env(t_list *env_list)
 
 // export builtin
 // TODO print_full_env if no arguments given???
-int	export(t_list **env_list, char **argv)
+int	export(t_list **env_list, char **args)
 {
 	char	**var;
 	t_list	*var_node;
 
 	var_node = NULL;
-	while (env_list && *env_list && *argv)
+	while (env_list && *env_list && *args)
 	{
-		var = parse_variable(*argv);
+		var = parse_variable(*args);
 		if (!var)
 			return (1);
 		var_node = find_envvar(env_list, var[0]);
 		if (var_node)
 			del_envvar(env_list, var_node);
 		ft_lstadd_back(env_list, ft_lstnew(var));
-		argv++;
+		args++;
 	}
 	return (0);
 }
 
 // unset builtin
-int	unset(t_list **env_list, char **argv)
+int	unset(t_list **env_list, char **args)
 {
 	char	**var;
 	t_list	*var_node;
 
-	while (env_list && *env_list && *argv)
+	while (env_list && *env_list && *args)
 	{
-		var = parse_variable(*argv);
+		var = parse_variable(*args);
 		if (!var)
 			return (1);
 		if (var[1])
-			return (1); // can't pass value for the variable with unset TODO print error msg
+		{
+			free_env_var(var);
+			return (1); //TODO print error msg
+		}
 		var_node = find_envvar(env_list, var[0]);
+		free_env_var(var);
 		if (var_node)
 			del_envvar(env_list, var_node);
-		argv++;
+		args++;
 	}
 	return (0);
 }
@@ -354,9 +419,6 @@ int	unset(t_list **env_list, char **argv)
 
 
 // TODO
-// - convert env list to array to pass it as argument to execve
-// - free env list on exit
-// - get_env that works with the env list
 // - validate env variable names (and values) for export and unset
 //   - names can only contain letters, digits and underscore
 //   - values must end with \0, and not exceed ARG_MAX
@@ -385,7 +447,14 @@ int main(int argc, char **argv, char **envp)
 	parse_env(&env_list, envp);
 //	print_full_env(env_list);
 
-
+	// env_list_to_array tester
+/*	char **e = env_list_to_array(env_list);
+	while (*e)
+	{
+		ft_printf("%s\n", *e);
+		e++;
+	}
+*/
 	while (1)
 	{
 		input = readline("input: ");
@@ -394,6 +463,7 @@ int main(int argc, char **argv, char **envp)
 		if (!input)
 		{
 			ft_putchar_fd('\n', 1);
+			clear_env_list(&env_list);
 			exit(0);
 		}
 
@@ -416,7 +486,7 @@ int main(int argc, char **argv, char **envp)
 
 			command = "cd";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
-				cd(input + 3);
+				cd(&env_list, input + 3);
 
 			command = "echo";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
@@ -427,7 +497,7 @@ int main(int argc, char **argv, char **envp)
 				print_full_env(env_list);
 			//	print_env(env_list);
 			
-			command = "export";//TODO
+			command = "export";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
 			{
 				char **args = ft_split(input + 7, ' ');
@@ -438,7 +508,7 @@ int main(int argc, char **argv, char **envp)
 				free(args);
 			}
 
-			command = "unset";//TODO
+			command = "unset";
 			if (!ft_strncmp(command, input, ft_strlen(command)))
 			{
 				char **args = ft_split(input + 6, ' ');
