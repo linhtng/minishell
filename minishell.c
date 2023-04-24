@@ -23,11 +23,8 @@ void	launch_prompt(char *input)
 		if (*input)
 			add_history(input);
 		if (lexer(input, &tokens))
-		{
 			print_tokens_list(tokens);
-			ft_lstclear(&tokens, del_token);
-			free_list(tokens);
-		}
+		ft_lstclear(&tokens, del_token);
 		free(input);
 		input = readline("minishell$  ");
 	}

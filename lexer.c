@@ -12,11 +12,13 @@
 
 #include "./includes/minishell.h"
 
-void	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
+int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {
 	char	*str_content;
 	t_token	*new_token;
+	t_list	*new_lem;
 
+	new_lem = NULL;
 	str_content = ft_substr(input, token->start_index, token->len);
 	if (str_content)
 	{
@@ -27,9 +29,15 @@ void	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 			new_token->type = type;
 			new_token->start_index = token->start_index;
 			new_token->len = token->start_index;
-			ft_lstadd_back(tokens, ft_lstnew(new_token));
+			new_lem = ft_lstnew(new_token);
+			if (new_lem)
+			{
+				ft_lstadd_back(tokens, new_lem);
+				return (1);
+			}
 		}
 	}
+	return (0);
 }
 
 int	save_token(char *input, int *i, t_token *token, t_list **token_lst)
@@ -42,44 +50,49 @@ int	save_token(char *input, int *i, t_token *token, t_list **token_lst)
 		if (*i && token_type(input, *i - 1) == 0)
 		{
 			token->len = *i - token->start_index;
-			add_token_lst(token, input, WORD, token_lst);
+			if (!add_token_lst(token, input, WORD, token_lst))
+				return (-1);
 		}
 		else if (type != SPACE && type != NULL_CHAR)
 		{
 			if (type == HERE_DOC || type == OUTPUT_APP)
 				(*i)++;
 			token->len = *i - token->start_index + 1;
-			add_token_lst(token, input, type, token_lst);
+			if (!add_token_lst(token, input, type, token_lst))
+				return (-1);
 		}
 		token->start_index = *i + 1;
 	}
 	return (token->start_index);
 }
 
-t_list	*token_lst(char *input, int size)
+void	token_lst(char *input, int size, t_list **tokens_lst)
 {
-	t_list	*tokens_lst;
 	t_token	*token;
 	int		i;
 	int		status;
 
 	token = (t_token *) malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	ft_bzero(token, sizeof(t_token));
-	token->string = NULL;
-	tokens_lst = NULL;
-	i = 0;
-	status = N_QUOTE;
-	while (i <= size)
+	if (token)
 	{
-		status = get_quote_status(input, i, status);
-		if (status == N_QUOTE)
-			token->start_index = save_token(input, &i, token, &tokens_lst);
-		i++;
+		ft_bzero(token, sizeof(t_token));
+		i = 0;
+		status = N_QUOTE;
+		while (i <= size)
+		{
+			status = get_quote_status(input, i, status);
+			if (status == N_QUOTE)
+				token->start_index = save_token(input, &i, token, tokens_lst);
+			if (token->start_index == -1)
+			{
+				ft_lstclear(tokens_lst, del_token);
+				free(token);
+				return (perror("Malloc error when creating token list"));
+			}
+			i++;
+		}
+		free(token);
 	}
-	free(token);
-	return (tokens_lst);
 }
 
 int	lexer(char *input, t_list **tokens)
@@ -101,7 +114,7 @@ int	lexer(char *input, t_list **tokens)
 		printf("\nminishell$: syntax error: unexpected end of file\n");
 		return (0);
 	}
-	*tokens = token_lst(input, len);
+	token_lst(input, len, tokens);
 	if (!tokens)
 		return (0);
 	return (1);

@@ -67,15 +67,3 @@ void	del_token(void *content)
 	free(((t_token *) content)->string);
 	free(content);
 }
-
-void	free_list(t_list *list)
-{
-	t_list	*tmp;
-
-	while (list != NULL)
-	{
-		tmp = list;
-		list = list->next;
-		free(tmp);
-	}
-}
