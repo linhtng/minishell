@@ -162,6 +162,10 @@ Next: properly save those tokens into the linked list.
 In `wip_joonas`, all builtins working. Some still require minor tweaks, noted in the code comments.
 Some further work on environment variables, but it should be fully working and editable with builtin commands and the helper functions. Remaining items detailed in code comments.
 
-#### Progress 20.04.23
+#### Progress 23.04.23
 
 In `wip_0`: lexer's tokenization working: save the tokens into t_list tokens. Handled syntax error when encounter unmatching quotes and should free memory when not needed anymore. 
+
+#### Progress 24.04.23
+
+In `wip_joonas`, some builtin tweaks, and mostly completed environment variable handling. Still needs validator for environment variable names to be used for `export` and `unset`, and some small fixes mentioned in the code.
