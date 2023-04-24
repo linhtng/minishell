@@ -36,9 +36,9 @@ enum	e_token_types
 	WORD,
 	SPACE,
 	PIPE,
-	INPUT,
-	OUTPUT_APP,
 	HERE_DOC,
+	OUTPUT_APP,
+	INPUT,
 	OUTPUT_TRUNC,
 	NULL_CHAR,
 };
@@ -75,6 +75,9 @@ int		count_occurences(const char *str, char c);
 int		get_quote_status(char *input, int i, int status);
 int		token_type(char *input, int i);
 void	del_token(void *content);
+void	free_tokens(t_list	*tokens);
+
+/* minishell_utils */
 void	free_list(t_list *list);
 
 /* lexer_debug */
