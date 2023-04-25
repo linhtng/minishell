@@ -69,18 +69,19 @@ int	ft_is_dir(const char *path)
 
 // parses single environment variable in the form NAME[=value] into a 2D array
 // FIXME too many lines
+// FIXME protect malloc failures from substr
 char	**parse_variable(char *str)
 {
 	int		nlen;
 	int		vlen;
 	char	*ptr;
-	char	**arr;
+	char	**var;
 
 	nlen = 0;
 	vlen = 0;
 	ptr = str;
-	arr = (char **)malloc(2 * sizeof(char *));
-	if (!arr)
+	var = (char **)malloc(2 * sizeof(char *));
+	if (!var)
 		return (NULL);
 	while (*ptr != '\0' && *ptr != '=')
 	{
@@ -95,15 +96,15 @@ char	**parse_variable(char *str)
 			vlen++;
 			ptr++;
 		}
-		arr[0] = ft_substr(str, 0, nlen);
-		arr[1] = ft_substr(str, nlen + 1, vlen);
+		var[0] = ft_substr(str, 0, nlen);
+		var[1] = ft_substr(str, nlen + 1, vlen);
 	}
 	else
 	{
-		arr[0] = ft_strdup(str);
-		arr[1] = NULL;
+		var[0] = ft_strdup(str);
+		var[1] = NULL;
 	}
-	return (arr);
+	return (var);
 }
 
 // print full environment, including variables with no values
@@ -152,7 +153,7 @@ t_list	*find_envvar(t_list **env_list, char *var)
 }
 
 // helper that frees the environment variable 2D array
-void	free_env_var(char **env_var)
+void	free_envvar(char **env_var)
 {
 	if (env_var[0])
 		free(env_var[0]);
@@ -179,7 +180,7 @@ void	del_envvar(t_list **env_list, t_list *var_node)
 				prev->next = lst->next;
 			else
 				*env_list = (*env_list)->next;
-			free_env_var((char **)var_node->content);
+			free_envvar((char **)var_node->content);
 			free(var_node);
 			return ;
 		}
@@ -196,10 +197,26 @@ void	clear_env_list(t_list **env_list)
 	lst = *env_list;
 	while(lst)
 	{
-		free_env_var((char **)lst->content);
+		free_envvar((char **)lst->content);
 		free(lst);
 		lst = lst->next;
 	}
+}
+
+// update env variable from *str, that is in form name[=value]
+// if variable does not exit in the environment, it will be added
+void	update_envvar(t_list **env_list, char *str)
+{
+	char **var;
+	t_list	*var_node;
+
+	var = parse_variable(*str);
+	if (!var)
+		return (NULL);
+	var_node = find_envvar(env_list, var[0]);
+	if (var_node)
+		del_envvar(env_list, var_node);
+	ft_lstadd_back(env_list, ft_lstnew(var));
 }
 
 // getenv() replacement
@@ -233,22 +250,44 @@ void	parse_env(t_list **env_list, char **envp)
 	}
 }
 
+// helper to free array generated with env_list_to_array
+void	free_env_array(char **envp)
+{
+	char	**ptr;
+
+	ptr = envp;
+	while (*ptr)
+	{
+		free(*ptr);
+		ptr++;
+	}
+	free(envp);
+}
+
 // convert env list to array to pass it to subprocesses via **envp argument
-// remember to free the list after sybprocesses finish
+// NOTE: remember to free the list after sybprocesses finish with free_env_array
+// FIXME too many lines
 char	**env_list_to_array(t_list *env_list)
 {
 	char	**envp;
-	char	**envvar;
 	char	**envptr;
+	char	**envvar;
 	size_t	len;
 
 	envp = (char **)malloc(sizeof(char *) * (ft_lstsize(env_list) + 1));
+	if (!envp)
+		return (NULL);
 	envptr = envp;
 	while(env_list)
 	{
 		envvar = (char **)env_list->content;
 		len = ft_strlen(envvar[0]) + ft_strlen(envvar[1]) + 2;
-		*envptr = (char *)malloc(len);
+		*envptr = (char *)malloc(sizeof(char) * len);
+		if (!*envptr)
+		{
+			free_env_array(envp);
+			return (NULL);
+		}
 		ft_strlcat(*envptr, envvar[0], len);
 		ft_strlcat(*envptr, "=", len);
 		ft_strlcat(*envptr, envvar[1], len);
@@ -257,6 +296,17 @@ char	**env_list_to_array(t_list *env_list)
 	}
 	envptr = NULL;
 	return (envp);
+}
+
+int	check_envvar_name(char *str)
+{
+	 while (*str)
+	 {
+		if (!ft_isalnum(*str) && *str != '_')
+			return (0);
+		str++;
+	 }
+	 return (1);
 }
 
 
@@ -299,7 +349,7 @@ int	pwd()
 //
 //TODO
 // - make sure it works with path that have spaces, or other special characters
-// - make sure PWD and OLDPWD environment variable is updated
+// - make sure PWD and OLDPWD environment variable is updated with update_envvar()
 // - errors should be output to STDERR, so no ft_printf
 int	cd(t_list **env_list, char *path)
 {
@@ -371,58 +421,67 @@ int	print_env(t_list *env_list)
 
 // export builtin
 // TODO print_full_env if no arguments given???
+// FIXME exporting variable name without value, should not overwrite existing value
 int	export(t_list **env_list, char **args)
 {
+	int		retval;
 	char	**var;
 	t_list	*var_node;
 
+	retval = 0;
 	var_node = NULL;
 	while (env_list && *env_list && *args)
 	{
 		var = parse_variable(*args);
 		if (!var)
 			return (1);
+		if (!check_envvar_name(var[0]))
+		{
+			ft_printf("export: '%s': not a valid identifier\n", *args);
+			args++;
+			retval = 1;
+			continue ;
+		}
 		var_node = find_envvar(env_list, var[0]);
 		if (var_node)
 			del_envvar(env_list, var_node);
 		ft_lstadd_back(env_list, ft_lstnew(var));
 		args++;
 	}
-	return (0);
+	return (retval);
 }
 
 // unset builtin
 int	unset(t_list **env_list, char **args)
 {
-	char	**var;
+	int		retval;
 	t_list	*var_node;
 
+	retval = 0;
 	while (env_list && *env_list && *args)
 	{
-		var = parse_variable(*args);
-		if (!var)
-			return (1);
-		if (var[1])
+		if (!check_envvar_name(*args))
 		{
-			free_env_var(var);
-			return (1); //TODO print error msg
+			ft_printf("export: '%s': not a valid identifier\n", *args);
+			retval = 1;
+			args++;
+			continue ;
 		}
-		var_node = find_envvar(env_list, var[0]);
-		free_env_var(var);
+		var_node = find_envvar(env_list, *args);
 		if (var_node)
 			del_envvar(env_list, var_node);
 		args++;
 	}
-	return (0);
+	return (retval);
 }
 
 
 
 // TODO
-// - validate env variable names (and values) for export and unset
-//   - names can only contain letters, digits and underscore
-//   - values must end with \0, and not exceed ARG_MAX
-//    (source: https://pubs.opengroup.org/onlinepubs/7908799/xbd/envvar.html)
+// - proper error message handling
+// - make sure argument list not longer than ARG_MAX bytes?????
+
+
 
 int main(int argc, char **argv, char **envp)
 {
@@ -449,12 +508,15 @@ int main(int argc, char **argv, char **envp)
 
 	// env_list_to_array tester
 /*	char **e = env_list_to_array(env_list);
-	while (*e)
+	char **p = e;
+	while (*p)
 	{
-		ft_printf("%s\n", *e);
-		e++;
+		ft_printf("%s\n", *p);
+		p++;
 	}
+	free_env_array(e);
 */
+
 	while (1)
 	{
 		input = readline("input: ");
