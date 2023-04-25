@@ -169,3 +169,7 @@ In `wip_0`: lexer's tokenization working: save the tokens into t_list tokens. Ha
 #### Progress 24.04.23
 
 In `wip_joonas`, some builtin tweaks, and mostly completed environment variable handling. Still needs validator for environment variable names to be used for `export` and `unset`, and some small fixes mentioned in the code.
+
+#### Progress 25.04.23
+
+In `wip_joonas`, environment variable names are now validated, added few neccessary functions, and did some small fixes. Thing should be now mostly complete, only some small fixes are still required. 
