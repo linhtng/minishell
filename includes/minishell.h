@@ -41,6 +41,7 @@ enum	e_token_types
 	INPUT,
 	OUTPUT_TRUNC,
 	NULL_CHAR,
+	VAR,
 };
 
 enum	e_quote
@@ -56,6 +57,7 @@ typedef struct s_token
 	int				len;
 	int				start_index;
 	int				type;
+	int				prev_type;
 }	t_token;
 
 typedef struct s_sh_data
