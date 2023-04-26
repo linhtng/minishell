@@ -12,6 +12,35 @@
 
 #include "./includes/minishell.h"
 
+int	check_var_type(t_token *token, char *str_content, int type)
+{
+	int		status;
+	int		i;
+
+	if (!ft_strchr(str_content, '$') || token->prev_type == HERE_DOC)
+		return (type);
+	i = 0;
+	status = N_QUOTE;
+	while (str_content[i] != '$')
+	{
+		status = get_quote_status(str_content, i, status);
+		i++;
+	}
+	if (status == IN_SQUOTE)
+		return (type);
+	return (VAR);
+}
+
+int	token_prev_type(t_list **tokens)
+{
+	t_list	*last_token;
+
+	last_token = ft_lstlast(*tokens);
+	if (last_token)
+		return (((t_token *) last_token->content)->type);
+	return (0);
+}
+
 int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {
 	char	*str_content;
@@ -26,7 +55,8 @@ int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 		if (new_token)
 		{
 			new_token->string = str_content;
-			new_token->type = type;
+			new_token->prev_type = token_prev_type(tokens);
+			new_token->type = check_var_type(new_token, str_content, type);
 			new_token->start_index = token->start_index;
 			new_token->len = token->start_index;
 			new_elem = ft_lstnew(new_token);
