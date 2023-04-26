@@ -173,3 +173,7 @@ In `wip_joonas`, some builtin tweaks, and mostly completed environment variable 
 #### Progress 25.04.23
 
 In `wip_joonas`, environment variable names are now validated, added few neccessary functions, and did some small fixes. Thing should be now mostly complete, only some small fixes are still required. 
+
+#### Progress 26.04.23
+
+In `wip_joonas`, builtin functions should be fully working, environment variables working and necessary helper functions done. They still requires some clean up, and the code should be organized properly.
