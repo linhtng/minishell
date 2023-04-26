@@ -21,7 +21,7 @@ static int	overflow(long result, int sign)
 	return (overflow_res);
 }
 
-static int	ft_isspace(int c)
+int	ft_isspace(int c)
 {
 	return (c == '\t' || c == '\v'
 		|| c == '\f' || c == '\r' || c == '\n' || c == ' ');
