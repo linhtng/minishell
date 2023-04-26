@@ -67,10 +67,51 @@ int	ft_is_dir(const char *path)
 
 /*************** ENV HELPERS ***************/
 
+// helper that frees the environment variable 2D array
+void	free_envvar(char **var)
+{
+	if (var[0])
+		free(var[0]);
+	if (var[1])
+		free(var[1]);
+	if (var)
+		free(var);
+}
+
 // parses single environment variable in the form NAME[=value] into a 2D array
 // FIXME too many lines
-// FIXME protect malloc failures from substr
 char	**parse_variable(char *str)
+{
+	int		nlen;
+	char	**var;
+
+	nlen = 0;
+	var = (char **)malloc(2 * sizeof(char *));
+	if (!var)
+		return (NULL);
+	while (str[nlen] != '\0' && str[nlen] != '=')
+		nlen++;
+	var[0] = ft_substr(str, 0, nlen);
+	if (!var[0])
+	{
+		free(var);
+		return (NULL);
+	}
+	if (str[nlen] == '=')
+	{
+		var[1] = ft_substr(str, nlen + 1, ft_strlen(str) - nlen - 1);
+		if (!var[1])
+		{
+			free_envvar(var);
+			return (NULL);
+		}
+	}
+	else
+		var[1] = NULL;
+	return (var);
+}
+// old version that was too long and missed some malloc protects
+/*char	**parse_variable(char *str)
 {
 	int		nlen;
 	int		vlen;
@@ -105,7 +146,7 @@ char	**parse_variable(char *str)
 		var[1] = NULL;
 	}
 	return (var);
-}
+}*/
 
 // print full environment, including variables with no values
 int	print_full_env(t_list *env_list)
@@ -152,18 +193,6 @@ t_list	*find_envvar(t_list **env_list, char *var)
 	return (lst);
 }
 
-// helper that frees the environment variable 2D array
-void	free_envvar(char **env_var)
-{
-	if (env_var[0])
-		free(env_var[0]);
-	if (env_var[1])
-		free(env_var[1]);
-	if (env_var)
-		free(env_var);
-}
-
-
 // helper to delete environment variable from the list
 void	del_envvar(t_list **env_list, t_list *var_node)
 {
@@ -203,20 +232,31 @@ void	clear_env_list(t_list **env_list)
 	}
 }
 
-// update env variable from *str, that is in form name[=value]
+// update env variable name with value 
 // if variable does not exit in the environment, it will be added
-void	update_envvar(t_list **env_list, char *str)
+// returns 0 on failure, 1 otherwise
+int	update_envvar(t_list **env_list, char *name, char *value)
 {
 	char **var;
 	t_list	*var_node;
 
-	var = parse_variable(*str);
+	if (!env_list || !name || !value)
+		return (0);
+	var = (char **)malloc(2 * sizeof(char *));
 	if (!var)
-		return (NULL);
+		return (0);
+	var[0] = ft_strdup(name);
+	var[1] = ft_strdup(value);
+	if (!var[0] || !var[1])
+	{
+		free_envvar(var);
+		return (0);
+	}
 	var_node = find_envvar(env_list, var[0]);
 	if (var_node)
 		del_envvar(env_list, var_node);
 	ft_lstadd_back(env_list, ft_lstnew(var));
+	return (1);
 }
 
 // getenv() replacement
@@ -230,22 +270,24 @@ char	*get_envvar(t_list **env_list, char *var)
 
 // parses environment from main's **envp argument into linked list,
 // that has the env variable stored as 2D array from ft_split
+// does not parse $_ or $OLDPWD
 // NOTE: Rememver to free the 2D array when not needed!
-//
-// FIXME: some variables (e.g. $_, $OLDPWD should be ignored probably)
 void	parse_env(t_list **env_list, char **envp)
 {
-	char **envvar;
+	char **var;
 
 	while (*envp)
 	{
-		envvar = parse_variable(*envp);
-		if (!envvar)
+		var = parse_variable(*envp);
+		if (!var)
 		{
 			clear_env_list(env_list);
 			exit(1);// TODO print error in case of env parsing failure?????
 		}
-		ft_lstadd_back(env_list, ft_lstnew(envvar));
+		if (!ft_strncmp(var[0], "_", 2) || !ft_strncmp(var[0], "OLDPWD", 7))
+			free_envvar(var);
+		else
+			ft_lstadd_back(env_list, ft_lstnew(var));
 		envp++;
 	}
 }
@@ -294,19 +336,21 @@ char	**env_list_to_array(t_list *env_list)
 		env_list = env_list->next;
 		envptr++;
 	}
-	envptr = NULL;
 	return (envp);
 }
 
 int	check_envvar_name(char *str)
 {
-	 while (*str)
-	 {
+	if (!ft_isalpha(*str) && *str != '_')
+			return (0);
+	str++;
+	while (*str)
+	{
 		if (!ft_isalnum(*str) && *str != '_')
 			return (0);
 		str++;
-	 }
-	 return (1);
+	}
+	return (1);
 }
 
 
@@ -341,6 +385,27 @@ int	pwd()
 	return (0);
 }
 
+
+// static helper for cd builtin function
+int	change_dir(t_list **env_list, char *path)
+{
+	char	*old_path;
+
+	old_path = get_curr_dir();
+	if (access(path, F_OK) < 0)
+		ft_printf("cd: no such file or directory: %s\n", path);
+	else if (access(path, X_OK) < 0)
+		ft_printf("cd: permission denied: %s\n", path);
+	else if (!ft_is_dir(path))
+		ft_printf("cd: not a directory: %s\n", path);
+	else if (chdir(path) == 0)
+	{
+		update_envvar(env_list, "OLDPWD", old_path);
+		update_envvar(env_list, "PWD", get_curr_dir());
+		return (1);
+	}
+	return (0);
+}
 // cd builtin
 // NOTE: only takes first element from argument array
 //
@@ -349,7 +414,6 @@ int	pwd()
 //
 //TODO
 // - make sure it works with path that have spaces, or other special characters
-// - make sure PWD and OLDPWD environment variable is updated with update_envvar()
 // - errors should be output to STDERR, so no ft_printf
 int	cd(t_list **env_list, char *path)
 {
@@ -357,23 +421,17 @@ int	cd(t_list **env_list, char *path)
 
 	if (path && *path)//checking *path probably not necessary after lexer parsing
 	{
-		if (access(path, F_OK) < 0)
-			ft_printf("cd: no such file or directory: %s\n", path);
-		else if (access(path, X_OK) < 0)
-			ft_printf("cd: permission denied: %s\n", path);
-		else if (!ft_is_dir(path))
-			ft_printf("cd: not a directory: %s\n", path);
-		else
-			if (chdir(path) == 0)
-				return (0);
+		if (change_dir(env_list, path))
+			return (0);
 	}
 	else
 	{
 		home_dir = get_envvar(env_list, "HOME");
 		if (home_dir)
-			if (chdir(home_dir) == 0)
+			if (change_dir(env_list, home_dir))
 				return (0);
 	}
+	ft_printf("generic error message bc cd failed\n");//FIXME
 	return (1);
 }
 
@@ -421,7 +479,6 @@ int	print_env(t_list *env_list)
 
 // export builtin
 // TODO print_full_env if no arguments given???
-// FIXME exporting variable name without value, should not overwrite existing value
 int	export(t_list **env_list, char **args)
 {
 	int		retval;
@@ -429,7 +486,6 @@ int	export(t_list **env_list, char **args)
 	t_list	*var_node;
 
 	retval = 0;
-	var_node = NULL;
 	while (env_list && *env_list && *args)
 	{
 		var = parse_variable(*args);
@@ -443,9 +499,10 @@ int	export(t_list **env_list, char **args)
 			continue ;
 		}
 		var_node = find_envvar(env_list, var[0]);
-		if (var_node)
+		if (var_node && var[1])
 			del_envvar(env_list, var_node);
-		ft_lstadd_back(env_list, ft_lstnew(var));
+		if (!var_node || (var_node && var[1]))
+			ft_lstadd_back(env_list, ft_lstnew(var));
 		args++;
 	}
 	return (retval);
@@ -479,7 +536,7 @@ int	unset(t_list **env_list, char **args)
 
 // TODO
 // - proper error message handling
-// - make sure argument list not longer than ARG_MAX bytes?????
+
 
 
 
