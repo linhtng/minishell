@@ -177,3 +177,10 @@ In `wip_joonas`, environment variable names are now validated, added few neccess
 #### Progress 26.04.23
 
 In `wip_joonas`, builtin functions should be fully working, environment variables working and necessary helper functions done. They still requires some clean up, and the code should be organized properly.
+
+#### Progress 27.04.23
+
+In `wip_0`: save tokens with VAR type to do env_var expansion later. Done lexer grammar check to print syntax error message when 	
+- command line starts with pipe operator '|'
+- encounters consecutive operators
+- command line ends with an operator
