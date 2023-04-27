@@ -67,3 +67,15 @@ void	del_token(void *content)
 	free(((t_token *) content)->string);
 	free(content);
 }
+
+void    print_error(int n, ...)
+{
+    va_list    msg;
+
+    ft_putstr_fd("minishell: ", 2);
+    va_start(msg, n);
+    while (n-- > 0)
+        ft_putstr_fd(va_arg(msg, char *), 2);
+    va_end(msg);
+    ft_putchar_fd('\n', 2);
+}

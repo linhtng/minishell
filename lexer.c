@@ -12,35 +12,6 @@
 
 #include "./includes/minishell.h"
 
-int	check_var_type(t_token *token, char *str_content, int type)
-{
-	int		status;
-	int		i;
-
-	if (!ft_strchr(str_content, '$') || token->prev_type == HERE_DOC)
-		return (type);
-	i = 0;
-	status = N_QUOTE;
-	while (str_content[i] != '$')
-	{
-		status = get_quote_status(str_content, i, status);
-		i++;
-	}
-	if (status == IN_SQUOTE)
-		return (type);
-	return (VAR);
-}
-
-int	token_prev_type(t_list **tokens)
-{
-	t_list	*last_token;
-
-	last_token = ft_lstlast(*tokens);
-	if (last_token)
-		return (((t_token *) last_token->content)->type);
-	return (0);
-}
-
 int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {
 	char	*str_content;
@@ -149,16 +120,17 @@ int	lexer(char *input, t_list **tokens)
 	d_quote = count_occurences(input, '\"');
 	if ((s_quote && s_quote % 2 != 0) || (d_quote && d_quote % 2 != 0))
 	{
-		printf("minishell$: unexpected EOF while looking for matching ");
 		if (s_quote % 2 != 0)
-			printf("`\'\'");
+			print_error(1, "unexpected EOF while looking for matching `\'\'");
 		else
-			printf("`\"\'");
-		printf("\nminishell$: syntax error: unexpected end of file\n");
+			print_error(1, "unexpected EOF while looking for matching `\"\'");
+		print_error(1, "syntax error: unexpected end of file");
 		return (0);
 	}
 	token_lst(input, len, tokens);
-	if (!tokens)
+	if (!tokens || !*tokens)
 		return (0);
-	return (1);
+	if (unexpected_operator(tokens))
+		return (0);
+	return (!unexpected_newline(tokens));
 }

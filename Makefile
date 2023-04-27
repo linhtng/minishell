@@ -17,6 +17,7 @@ CFLAGS = -Wall -Wextra -Werror -g3
 SRC = minishell.c \
 	lexer_utils.c \
 	lexer.c \
+	lexer_token_utils.c \
 	lexer_debug.c \
 
 OBJSFD 	= objs
