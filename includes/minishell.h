@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdarg.h>
 
 typedef struct s_spldata
 {
@@ -35,13 +36,13 @@ enum	e_token_types
 {
 	WORD,
 	SPACE,
+	VAR,
+	NULL_CHAR,
 	PIPE,
 	HERE_DOC,
 	OUTPUT_APP,
 	INPUT,
 	OUTPUT_TRUNC,
-	NULL_CHAR,
-	VAR,
 };
 
 enum	e_quote
@@ -72,6 +73,12 @@ void	launch_prompt(char *input);
 /* lexer */
 int		lexer(char *input, t_list **tokens);
 
+/* lexer_token_utils */
+int	check_var_type(t_token *token, char *str_content, int type);
+int	token_prev_type(t_list **tokens);
+int	unexpected_operator(t_list **tokens);
+int	unexpected_newline(t_list **tokens);
+
 /* lexer_utils */
 int		count_occurences(const char *str, char c);
 int		get_quote_status(char *input, int i, int status);
@@ -80,7 +87,7 @@ void	del_token(void *content);
 void	free_tokens(t_list	*tokens);
 
 /* minishell_utils */
-void	free_list(t_list *list);
+void    print_error(int n, ...);
 
 /* lexer_debug */
 void	print_tokens_list(t_list *list);
