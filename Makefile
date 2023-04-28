@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/04/28 18:00:59 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/04/28 18:01:53 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ AR = ar
 CFLAGS += -Wall -Wextra -Werror
 
 NAME = minishell
-SRC = src/minishell.c
+SRC = src/minishell.c src/utils.c
 OBJ = $(SRC:.c=.o)
 
 HEADER_PATH = ./include

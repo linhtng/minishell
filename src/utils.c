@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/28 18:02:29 by jhenriks         ###   ########.fr       */
+/*   Created: 2023/04/28 16:48:31 by jhenriks          #+#    #+#             */
+/*   Updated: 2023/04/28 17:39:32 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdarg.h>
-# include "libft.h"
+// prints n strings, passed as arguments, to STDERR
+// strings are not separated by spaces, newline is added at end
+void	print_error(int n, ...)
+{
+	va_list	msg;
 
-void	print_error(int n, ...);
-
-#endif
+	ft_putstr_fd("minishell: ", 2);
+	va_start(msg, n);
+	while (n-- > 0)
+		ft_putstr_fd(va_arg(msg, char *), 2);
+	va_end(msg);
+	ft_putchar_fd('\n', 2);
+}
