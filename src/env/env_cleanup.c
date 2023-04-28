@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   env_cleanup.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/28 18:57:37 by jhenriks         ###   ########.fr       */
+/*   Created: 2023/04/28 16:32:10 by jhenriks          #+#    #+#             */
+/*   Updated: 2023/04/28 19:05:09 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdarg.h>
-# include "libft.h"
+// frees single environment variable 2D array
+void	free_envvar(char **var)
+{
+	if (var[0])
+		free(var[0]);
+	if (var[1])
+		free(var[1]);
+	if (var)
+		free(var);
+}
 
-void	print_error(int n, ...);
+// clears the whole environment variable list
+void	clear_env_list(t_list **env_list)
+{
+	t_list	*lst;
 
-char	**parse_variable(char *str);
-void	parse_env(t_list **env_list, char **envp);
-void	free_envvar(char **var);
-void	clear_env_list(t_list **env_list);
-
-#endif
+	lst = *env_list;
+	while (lst)
+	{
+		free_envvar((char **)lst->content);
+		free(lst);
+		lst = lst->next;
+	}
+}
