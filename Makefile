@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/04/27 21:39:11 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/04/28 18:00:59 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,10 @@ all : $(NAME)
 $(NAME) : $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(LIBS) $(OBJ) -o $(NAME)
 
+%.o : %.c
+	$(CC) $(CFLAGS) -I $(HEADER_PATH) -I $(LIBFT_PATH) -c $< -o $@
+
 $(OBJ) : $(SRC)
-	$(CC) $(CFLAGS) -I $(HEADER_PATH) -I $(LIBFT_PATH) -c $(SRC) -o $@
 
 $(LIBFT) :
 	make -C $(LIBFT_PATH)
