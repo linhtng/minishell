@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:26:47 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:45:34 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:49:10 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	update_envvar(t_list **env_list, char *name, char *value)
 	char	**var;
 	t_list	*var_node;
 
-	if (!env_list || !name || !value)
+	if (!env_list || !name || !value || !check_envvar_name(name))
 		return (0);
 	var = (char **)malloc(2 * sizeof(char *));
 	if (!var)
