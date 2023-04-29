@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:26:47 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 19:09:57 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:37:59 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,31 @@ char	*get_envvar(t_list **env_list, char *var)
 
 	envvar = (char **)find_envvar(env_list, var)->content;
 	return (envvar[1]);
+}
+
+// update env variable 'name' with 'value'
+// if variable does not exit in the environment, it will be added
+// returns 0 on failure, 1 otherwise
+int	update_envvar(t_list **env_list, char *name, char *value)
+{
+	char	**var;
+	t_list	*var_node;
+
+	if (!env_list || !name || !value)
+		return (0);
+	var = (char **)malloc(2 * sizeof(char *));
+	if (!var)
+		return (0);
+	var[0] = ft_strdup(name);
+	var[1] = ft_strdup(value);
+	if (!var[0] || !var[1])
+	{
+		free_envvar(var);
+		return (0);
+	}
+	var_node = find_envvar(env_list, var[0]);
+	if (var_node)
+		del_envvar(env_list, var_node);
+	ft_lstadd_back(env_list, ft_lstnew(var));
+	return (1);
 }
