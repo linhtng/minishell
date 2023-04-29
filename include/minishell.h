@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:45:27 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 21:00:19 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,9 @@ t_list	*find_envvar(t_list **env_list, char *var);
 char	*get_envvar(t_list **env_list, char *var);
 int		check_envvar_name(char *str);
 int		update_envvar(t_list **env_list, char *name, char *value);
+
+/* env_export */
+void	free_env_array(char **envp);
+char	**env_list_to_array(t_list *env_list);
 
 #endif
