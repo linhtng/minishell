@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/28 18:57:37 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 19:59:33 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ typedef struct s_token
 int		lexer(char *input, t_list **tokens);
 
 /* lexer_token_utils */
-int	check_var_type(t_token *token, char *str_content, int type);
-int	token_prev_type(t_list **tokens);
-int	unexpected_operator(t_list **tokens);
-int	unexpected_newline(t_list **tokens);
+int		check_var_type(t_token *token, char *str_content, int type);
+int		token_prev_type(t_list **tokens);
+int		unexpected_operator(t_list **tokens);
+int		unexpected_newline(t_list **tokens);
 
 /* lexer_utils */
 int		count_occurences(const char *str, char c);
