@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 21:00:19 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 21:17:06 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,8 @@ int		update_envvar(t_list **env_list, char *name, char *value);
 /* env_export */
 void	free_env_array(char **envp);
 char	**env_list_to_array(t_list *env_list);
+
+/* env_debug */
+int		print_full_env(t_list *env_list);
 
 #endif
