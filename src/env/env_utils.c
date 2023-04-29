@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:26:47 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:37:59 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:45:34 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,21 @@ char	*get_envvar(t_list **env_list, char *var)
 
 	envvar = (char **)find_envvar(env_list, var)->content;
 	return (envvar[1]);
+}
+
+// checks that environment variable name is up to specs
+int	check_envvar_name(char *str)
+{
+	if (!ft_isalpha(*str) && *str != '_')
+		return (0);
+	str++;
+	while (*str)
+	{
+		if (!ft_isalnum(*str) && *str != '_')
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
 // update env variable 'name' with 'value'

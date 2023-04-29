@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:38:07 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:45:27 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	del_envvar(t_list **env_list, t_list *var_node);
 /* env_utils */
 t_list	*find_envvar(t_list **env_list, char *var);
 char	*get_envvar(t_list **env_list, char *var);
+int		check_envvar_name(char *str);
 int		update_envvar(t_list **env_list, char *name, char *value);
 
 #endif
