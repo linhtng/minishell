@@ -13,11 +13,12 @@
 CC = cc
 AR = ar
 
-CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -Wall -Wextra -Werror -g3
 
 NAME = minishell
 SRC = src/minishell.c src/utils.c
 SRC += src/env/env_parsing.c src/env/env_cleanup.c
+SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c src/lexer/lexer_debug.c
 OBJ = $(SRC:.c=.o)
 
 HEADER_PATH = ./include
