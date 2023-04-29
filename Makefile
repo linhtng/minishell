@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/04/28 18:28:45 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/04/29 19:04:01 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS += -Wall -Wextra -Werror -g3
 
 NAME = minishell
 SRC = src/minishell.c src/utils.c
-SRC += src/env/env_parsing.c src/env/env_cleanup.c
+SRC += src/env/env_parsing.c src/env/env_cleanup.c src/env/env_utils.c
 SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c src/lexer/lexer_debug.c
 OBJ = $(SRC:.c=.o)
 

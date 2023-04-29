@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 19:59:33 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:22:44 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	parse_env(t_list **env_list, char **envp);
 void	free_envvar(char **var);
 void	clear_env_list(t_list **env_list);
 void	print_env_list(t_list **env_list);
+t_list	*find_envvar(t_list **env_list, char *var);
+char	*get_envvar(t_list **env_list, char *var);
 
 enum	e_token_types
 {
