@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {

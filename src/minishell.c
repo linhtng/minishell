@@ -12,29 +12,40 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	launch_prompt(char *input, char **envp)
 {
-	char	*input;
+	t_list	*tokens;
 	t_list	*env_list;
 
-	(void)argc;
-	(void)argv;
-	parse_env(&env_list, envp);
-	ft_putstr_fd("Welcome to Minishell\n", 1);
-	while ("minishell")
+	tokens = NULL;
+	env_list = NULL;
+	input = readline("minishell$  ");
+	if (input)
+		parse_env(&env_list, envp);
+	while (input != NULL && ft_strncmp(input, "exit", 5))
 	{
-		input = readline("input: ");
-		if (!input)
-		{
-			ft_putchar_fd('\n', 1);
-			clear_env_list(&env_list);
-			exit(0);
-		}
-		if (ft_strlen(input) > 0)
-		{
+		if (ft_strlen(input) > ft_strlen("minishell$  "))
 			add_history(input);
-		}
+		if (lexer(input, &tokens))
+			print_tokens_list(tokens);
+		ft_lstclear(&tokens, del_token);
+		free(input);
+		input = readline("minishell$  ");
+	}
+	if (*input)
+	{
+		add_history(input);
 		free(input);
 	}
-	return (1);
+	clear_env_list(&env_list);
+}
+
+int	main(int arc, char **arv, char **envp)
+{
+	char	*input;
+
+	input = NULL;
+	if (arc == 1 && arv)
+		launch_prompt(input, envp);
+	return (0);
 }

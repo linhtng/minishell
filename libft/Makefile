@@ -25,7 +25,7 @@ ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c \
 ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_numlen.c ft_unumlen.c ft_uitoa.c \
 ft_hexlen.c ft_itohex.c ft_memjoin.c get_next_line.c ft_printf.c \
 ft_printf_conversions.c ft_printf_utils.c ft_lstprev.c ft_lstpos.c \
-ft_lstnbr.c ft_isnumstr.c ft_isintstr.c ft_intdup.c ft_atof.c ft_isfloatstr.c
+ft_lstnbr.c ft_isnumstr.c ft_isintstr.c ft_intdup.c ft_atof.c ft_isfloatstr.c ft_isspace.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 HEADER_PATH = .
 
