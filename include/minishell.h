@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:22:44 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:25:20 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,6 @@
 # include <readline/history.h>
 # include <stdarg.h>
 # include "libft.h"
-
-/* utils */
-void	print_error(int n, ...);
-
-char	**parse_variable(char *str);
-void	parse_env(t_list **env_list, char **envp);
-void	free_envvar(char **var);
-void	clear_env_list(t_list **env_list);
-void	print_env_list(t_list **env_list);
-t_list	*find_envvar(t_list **env_list, char *var);
-char	*get_envvar(t_list **env_list, char *var);
 
 enum	e_token_types
 {
@@ -58,6 +47,9 @@ typedef struct s_token
 	int				prev_type;
 }	t_token;
 
+/* utils */
+void	print_error(int n, ...);
+
 /* lexer */
 int		lexer(char *input, t_list **tokens);
 
@@ -76,5 +68,17 @@ void	free_tokens(t_list	*tokens);
 
 /* lexer_debug */
 void	print_tokens_list(t_list *list);
+
+/* env_parsing */
+char	**parse_variable(char *str);
+void	parse_env(t_list **env_list, char **envp);
+
+/* env_cleanup */
+void	free_envvar(char **var);
+void	clear_env_list(t_list **env_list);
+
+/* env_utils */
+t_list	*find_envvar(t_list **env_list, char *var);
+char	*get_envvar(t_list **env_list, char *var);
 
 #endif
