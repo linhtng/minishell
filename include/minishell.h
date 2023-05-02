@@ -60,7 +60,6 @@ int		unexpected_operator(t_list **tokens);
 int		unexpected_newline(t_list **tokens);
 
 /* lexer_utils */
-int		count_occurences(const char *str, char c);
 int		get_quote_status(char *input, int i, int status);
 int		token_type(char *input, int i);
 void	del_token(void *content);

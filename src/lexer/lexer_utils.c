@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-int	count_occurences(const char *str, char c)
-{
-	int	count;
-	int	i;
-
-	if (!str)
-		return (0);
-	count = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
-}
-
 int	get_quote_status(char *input, int i, int status)
 {
 	if (status == N_QUOTE && input[i] == '\'')
