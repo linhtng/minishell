@@ -184,3 +184,12 @@ In `wip_0`: save tokens with VAR type to do env_var expansion later. Done lexer 
 - command line starts with pipe operator '|'
 - encounters consecutive operators
 - command line ends with an operator
+
+#### Progress 27.04.23
+
+In `master`: basic expand function which expands all environment variables in a token string to its value. For example, token string "hello $USER, your home is $HOME  " will become "hello thuynguy, your home is /Users/thuynguy  ".
+To be fixed: 
+- same env_var appears more than 1 in the same string
+- env_var inside '' and "" are messing up
+- syntax error when var doesn't exist
+- removing quotes
