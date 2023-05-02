@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/05/02 20:31:30 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/05/02 20:42:14 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC += src/env/env_parsing.c src/env/env_cleanup.c src/env/env_utils.c src/env/e
 SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c
 SRC += src/expand/expand.c src/expand/expand_false_var.c src/expand/expand_quotes.c
 SRC += src/parser/parser_commands.c src/parser/parser_commands_utils.c src/parser/parser_utils.c
-SRC += src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c
+SRC += src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c
 OBJ = $(SRC:.c=.o)
 HEADERS = include/minishell.h
 
