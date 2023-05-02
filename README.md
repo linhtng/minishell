@@ -193,3 +193,5 @@ To be fixed:
 - env_var inside '' and "" are messing up
 - syntax error when var doesn't exist
 - removing quotes
+
+Started working on the executor in `exec1` branch. Currently it only includes functions for the built in commands, but doesn't do anything with them yet.
