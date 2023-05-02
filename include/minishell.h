@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 20:25:50 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/02 20:31:15 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,6 @@ int		echo(char **args);
 int		env(t_list *env_list);
 void	exit_shell(t_list **env_list, char *n);
 int		export(t_list **env_list, char **args);
+int		pwd(void);
 
 #endif
