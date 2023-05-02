@@ -90,4 +90,7 @@ char	**env_list_to_array(t_list *env_list);
 /* env_debug */
 int		print_full_env(t_list *env_list);
 
+/* expand */
+int		expand(t_list **tokens, t_list **env_list);
+
 #endif

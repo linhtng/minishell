@@ -19,20 +19,22 @@ void	launch_prompt(char *input, char **envp)
 
 	tokens = NULL;
 	env_list = NULL;
+	parse_env(&env_list, envp);
 	input = readline("minishell$  ");
-	if (input)
-		parse_env(&env_list, envp);
 	while (input != NULL && ft_strncmp(input, "exit", 5))
 	{
-		if (ft_strlen(input) > ft_strlen("minishell$  "))
+		if (ft_strlen(input) > 0)
 			add_history(input);
 		if (lexer(input, &tokens))
+		{
+			expand(&tokens, &env_list);
 			print_tokens_list(tokens);
+		}
 		ft_lstclear(&tokens, del_token);
 		free(input);
 		input = readline("minishell$  ");
 	}
-	if (*input)
+	if (input)
 	{
 		add_history(input);
 		free(input);
@@ -47,5 +49,5 @@ int	main(int arc, char **arv, char **envp)
 	input = NULL;
 	if (arc == 1 && arv)
 		launch_prompt(input, envp);
-	return (0);
+	return (1);
 }
