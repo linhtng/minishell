@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/22 19:25:55 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:54:17 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,8 @@ int		parse_pipe(t_list *commands);
 
 /* parser_utils */
 char	*mns_strjoin(char *s1, char const *s2);
+
+/* builtins */
+void	exit_shell(t_list **env_list, char *n);
 
 #endif
