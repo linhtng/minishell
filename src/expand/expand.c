@@ -12,45 +12,67 @@
 
 #include "minishell.h"
 
-char	*enpanded_str(t_token *token, char *var, char **env_list, int new_len)
+int	get_enpanded_str(t_token *token, char *var, char **env_list)
 {
-	char	*old_string;
 	char	*new_string;
+	int		new_len;
 	int		var_index;
 	int		var_name_len;
 
+	new_len = token->len - ft_strlen(env_list[0]) + ft_strlen(env_list[1]);
 	new_string = (char *) malloc(sizeof(char) * (new_len + 1));
-	if (new_string)
+	if (!new_string)
+		return (0);
+	ft_bzero(new_string, new_len);
+	var_index = (int)(var - token->string);
+	var_name_len = ft_strlen(env_list[0]);
+	ft_strlcat(new_string, token->string, var_index);
+	ft_strlcat(new_string, env_list[1], new_len);
+	ft_strlcat(new_string, &token->string[var_index + var_name_len], new_len);
+	free(token->string);
+	token->string = new_string;
+	token->len = new_len;
+	return (1);
+}
+
+int	var_quote_status(char *string, int index, int q_status)
+{
+	int	i;
+
+	i = 0;
+	while (i < index)
 	{
-		old_string = token->string;
-		var_index = (int)(var - old_string);
-		var_name_len = ft_strlen(env_list[0]);
-		ft_memmove(new_string, old_string, var_index - 1);
-		ft_strlcat(new_string, env_list[1], new_len);
-		ft_strlcat(new_string, &old_string[var_index + var_name_len], new_len);
-		free(old_string);
+		q_status = get_quote_status(string, i, q_status);
+		i++;
 	}
-	return (new_string);
+	return (q_status);
 }
 
 int	replace_var_value(t_token *token, char **env_list)
 {
 	char	*var;
-	char	*new_string;
-	int		new_len;
+	char	*ptr;
+	int		var_index;
 
 	var = NULL;
-	new_len = 0;
-	new_string = NULL;
 	var = ft_strnstr(token->string, env_list[0], token->len);
-	if (var)
+	if (!var)
+		return (1);
+	ptr = token->string;
+	var_index = (int)(var - token->string);
+	while (var)
 	{
-		new_len = token->len - ft_strlen(env_list[0]) + ft_strlen(env_list[1]);
-		new_string = enpanded_str(token, var, env_list, new_len);
-		if (!new_string)
-			return (0);
-		token->string = new_string;
-		token->len = new_len;
+		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE)
+		{
+			if (!get_enpanded_str(token, var, env_list))
+				return (0);
+			else
+				ptr = &(token->string[token->len - 1]);
+		}
+		else
+			ptr = &(token->string[var_index + ft_strlen(env_list[0])]);
+		var = ft_strnstr(ptr, env_list[0], token->len);
+		var_index = (int)(var - token->string);
 	}
 	return (1);
 }
@@ -74,6 +96,7 @@ int	expand(t_list **tokens, t_list **env_list)
 			}
 		}
 		token_ptr = token_ptr->next;
+		env_ptr = *env_list;
 	}
 	return (1);
 }

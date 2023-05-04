@@ -12,19 +12,24 @@
 
 #include "minishell.h"
 
-int	check_var_type(t_token *token, char *str_content, int type)
+int	check_var_type(t_token *token, char *str, int type)
 {
 	int		status;
-	int		i;
+	char	*ptr;
+	char	*var;
 
-	if (!ft_strchr(str_content, '$') || token->prev_type == HERE_DOC)
+	var = ft_strchr(str, '$');
+	if (!var || token->prev_type == HERE_DOC)
 		return (type);
-	i = 0;
-	status = N_QUOTE;
-	while (str_content[i] != '$')
+	status = get_quote_status(str, 0, N_QUOTE);
+	ptr = str;
+	while (var)
 	{
-		status = get_quote_status(str_content, i, status);
-		i++;
+		status = var_quote_status(str, (int)(var - str), status);
+		if (status != IN_SQUOTE)
+			return (VAR);
+		ptr++;
+		var = ft_strchr(ptr, '$');
 	}
 	if (status == IN_SQUOTE)
 		return (type);

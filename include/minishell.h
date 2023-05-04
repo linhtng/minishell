@@ -92,5 +92,6 @@ int		print_full_env(t_list *env_list);
 
 /* expand */
 int		expand(t_list **tokens, t_list **env_list);
+int		var_quote_status(char *string, int index, int q_status);
 
 #endif
