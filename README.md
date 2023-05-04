@@ -189,9 +189,7 @@ In `wip_0`: save tokens with VAR type to do env_var expansion later. Done lexer 
 
 In `master`: basic expand function which expands all environment variables in a token string to its value. For example, token string "hello $USER, your home is $HOME  " will become "hello thuynguy, your home is /Users/thuynguy  ".
 To be fixed: 
-- same env_var appears more than 1 in the same string
-- env_var inside '' and "" are messing up
-- syntax error when var doesn't exist
+- syntax error when var doesn't exist. Remember to fix the one that contains valid var name, e.g. echo $HIPATH
 - removing quotes
 
 Started working on the executor in `exec1` branch. Currently it only includes functions for the built in commands, but doesn't do anything with them yet.
