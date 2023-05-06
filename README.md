@@ -14,6 +14,8 @@ A zero-length input shoud not be added to history.
 
 The history can be freed calling `void rl_clear_history (void)`.
 
+It would be nice security practice to bzero the input from readline every time before free()ing.
+
 ### Lexer
 In a shell, a lexer (short for "lexical analyzer") is a component of the shell's parser that breaks down a user's input into a series of tokens or lexemes.
 
