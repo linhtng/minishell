@@ -48,31 +48,54 @@ int	var_quote_status(char *string, int index, int q_status)
 	return (q_status);
 }
 
+int	get_envvar_len(char *str, char *var_name)
+{
+	int		i;
+	int		len;
+	char	*var;
+
+	var = ft_strnstr(str, var_name, ft_strlen(str));
+	if (!ft_strchr(str, '$') || !var)
+		return (0);
+	i = (int)(var - str);
+	if (str[i - 1] != '$')
+		return (0);
+	len = 0;
+	if (ft_isdigit(str[i]) || str[i] == '?')
+		return (1);
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			break ;
+		i++;
+		len++;
+	}
+	return (len);
+}
+
 int	replace_var_value(t_token *token, char **env_list)
 {
 	char	*var;
 	char	*ptr;
 	int		var_index;
 
-	var = NULL;
 	var = ft_strnstr(token->string, env_list[0], token->len);
 	if (!var)
 		return (1);
 	ptr = token->string;
-	var_index = (int)(var - token->string);
 	while (var)
 	{
+		var_index = (int)(var - token->string);
 		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE)
 		{
 			if (!get_enpanded_str(token, var, env_list))
 				return (0);
 			else
-				ptr = &(token->string[token->len - 1]);
+				ptr = &(token->string[var_index - 1 + ft_strlen(env_list[1])]);
 		}
 		else
-			ptr = &(token->string[var_index + ft_strlen(env_list[0])]);
+			ptr = &(token->string[var_index -1 + ft_strlen(env_list[0])]);
 		var = ft_strnstr(ptr, env_list[0], token->len);
-		var_index = (int)(var - token->string);
 	}
 	return (1);
 }
@@ -88,6 +111,8 @@ int	expand(t_list **tokens, t_list **env_list)
 	{
 		if (((t_token *) token_ptr->content)->type == VAR)
 		{
+			if (!check_false_var(token_ptr->content, env_list))
+				return (0);
 			while (env_ptr != NULL)
 			{	
 				if (!replace_var_value(token_ptr->content, env_ptr->content))

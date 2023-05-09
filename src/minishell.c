@@ -27,17 +27,12 @@ void	launch_prompt(char *input, char **envp)
 			add_history(input);
 		if (lexer(input, &tokens))
 		{
-			expand(&tokens, &env_list);
-			print_tokens_list(tokens);
+			if (expand(&tokens, &env_list))
+				print_tokens_list(tokens);
 		}
 		ft_lstclear(&tokens, del_token);
 		free(input);
 		input = readline("minishell$  ");
-	}
-	if (input)
-	{
-		add_history(input);
-		free(input);
 	}
 	clear_env_list(&env_list);
 }
