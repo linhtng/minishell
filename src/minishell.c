@@ -34,6 +34,8 @@ void	launch_prompt(char *input, char **envp)
 		free(input);
 		input = readline("minishell$  ");
 	}
+	if (input)
+		free(input);
 	clear_env_list(&env_list);
 }
 

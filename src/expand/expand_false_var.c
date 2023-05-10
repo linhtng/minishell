@@ -6,7 +6,7 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 20:52:49 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/09 21:07:21 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:14:08 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -53,11 +53,13 @@ int	has_false_var(char *string, t_list **env_list, int var_len)
 	return (1);
 }
 
-int	remove_false_var(t_token *token, int var_len, int index)
+int	remove_false_var(t_token *token, int var_len, char *var)
 {
 	char	*new_str;
 	int		new_len;
+	int		index;
 
+	index = (int)(var - token->string);
 	new_len = token->len - var_len - 1;
 	if (new_len)
 	{
@@ -76,11 +78,22 @@ int	remove_false_var(t_token *token, int var_len, int index)
 	return (1);
 }
 
+int	remove_var_conditions(char *string, char *var, t_list **env, int var_len)
+{
+	int	var_index;
+
+	var_index = (int)(var - string);
+	if (var_quote_status(string, var_index, N_QUOTE) != IN_SQUOTE
+		&& has_false_var(&string[var_index + 1], env, var_len)
+		&& string[var_index + 1] != '?')
+		return (1);
+	return (0);
+}
+
 int	check_false_var(t_token *token, t_list **env_list)
 {
 	char	*var;
 	char	*ptr;
-	int		var_index;
 	int		var_len;
 
 	var = ft_strchr(token->string, '$');
@@ -91,18 +104,15 @@ int	check_false_var(t_token *token, t_list **env_list)
 	while (var)
 	{
 		var_len = false_var_len(ptr);
-		var_index = (int)(var - token->string);
-		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE
-			&& has_false_var(&token->string[var_index + 1], env_list, var_len)
-			&& token->string[var_index + 1] != '?')
+		if (remove_var_conditions(token->string, var, env_list, var_len))
 		{
-			if (!remove_false_var(token, var_len, var_index))
+			if (!remove_false_var(token, var_len, var))
 				return (0);
 			else
 				ptr = token->string;
 		}
 		else
-			ptr = &(token->string[var_index + 1 + var_len]);
+			ptr = &(token->string[(int)(var - token->string) + 1 + var_len]);
 		var = ft_strchr(ptr, '$');
 	}
 	return (1);
