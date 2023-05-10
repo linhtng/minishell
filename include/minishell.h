@@ -95,6 +95,6 @@ int		expand(t_list **tokens, t_list **env_list);
 int		var_quote_status(char *string, int index, int q_status);
 
 /* expand_false_var */
-int	check_false_var(t_token *token, t_list **env_list);
+int		check_false_var(t_token *token, t_list **env_list);
 
 #endif
