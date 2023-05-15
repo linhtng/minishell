@@ -43,8 +43,7 @@ int	removed_quote(t_token *token, int len, int q_status)
 		new_str = (char *) malloc(sizeof(char) * (len + 1));
 		if (!new_str)
 			return (0);
-		ft_bzero(new_str, len - 1);
-		new_str[len] = '\0';
+		ft_bzero(new_str, len + 1);
 		i = 0;
 		j = 0;
 		while (token->string[i])
