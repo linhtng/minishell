@@ -20,7 +20,7 @@ int	get_enpanded_str(t_token *token, char *var, char **env_list)
 	int		var_name_len;
 
 	new_len = token->len - ft_strlen(env_list[0]) + ft_strlen(env_list[1]);
-	new_string = (char *) malloc(sizeof(char) * (new_len + 1));
+	new_string = (char *) malloc(sizeof(char) * new_len);
 	if (!new_string)
 		return (0);
 	ft_bzero(new_string, new_len);
@@ -86,7 +86,8 @@ int	replace_var_value(t_token *token, char **env_list)
 	while (var)
 	{
 		var_index = (int)(var - token->string);
-		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE)
+		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE
+			&& get_envvar_len(ptr, env_list[0]) == (int) ft_strlen(env_list[0]))
 		{
 			if (!get_enpanded_str(token, var, env_list))
 				return (0);
@@ -120,6 +121,8 @@ int	expand(t_list **tokens, t_list **env_list)
 				env_ptr = env_ptr->next;
 			}
 		}
+		if (!apply_quoting_rules(token_ptr->content))
+			return (0);
 		token_ptr = token_ptr->next;
 		env_ptr = *env_list;
 	}

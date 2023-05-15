@@ -6,7 +6,7 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 20:52:49 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/10 14:14:08 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/15 17:12:04 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,15 +38,14 @@ int	false_var_len(char *str)
 int	has_false_var(char *string, t_list **env_list, int var_len)
 {
 	t_list	*env_ptr;
-	int		env_sum;
-	int		false_var;
+	char	*env_name;
 
 	env_ptr = *env_list;
-	env_sum = ft_lstsize(*env_list);
-	false_var = 0;
 	while (env_ptr != NULL)
 	{	
-		if (!ft_strncmp(string, ((char **) env_ptr->content)[0], var_len))
+		env_name = ((char **) env_ptr->content)[0];
+		if (!ft_strncmp(string, env_name, var_len)
+			&& var_len == (int) ft_strlen(env_name))
 			return (0);
 		env_ptr = env_ptr->next;
 	}
@@ -104,7 +103,8 @@ int	check_false_var(t_token *token, t_list **env_list)
 	while (var)
 	{
 		var_len = false_var_len(ptr);
-		if (remove_var_conditions(token->string, var, env_list, var_len))
+		if (var_len
+			&& remove_var_conditions(token->string, var, env_list, var_len))
 		{
 			if (!remove_false_var(token, var_len, var))
 				return (0);

@@ -6,7 +6,7 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 17:59:10 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/04/29 18:39:31 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:44:10 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,13 @@
 
 int	check_var_type(t_token *token, char *str, int type)
 {
-	int		status;
-	char	*ptr;
 	char	*var;
 
 	var = ft_strchr(str, '$');
 	if (!var || token->prev_type == HERE_DOC)
 		return (type);
-	status = get_quote_status(str, 0, N_QUOTE);
-	ptr = str;
-	while (var)
-	{
-		status = var_quote_status(str, (int)(var - str), status);
-		if (status != IN_SQUOTE)
-			return (VAR);
-		ptr++;
-		var = ft_strchr(ptr, '$');
-	}
-	if (status == IN_SQUOTE)
-		return (type);
-	return (VAR);
+	else
+		return (VAR);
 }
 
 int	token_prev_type(t_list **tokens)

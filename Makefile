@@ -19,7 +19,7 @@ NAME = minishell
 SRC = src/minishell.c src/utils.c
 SRC += src/env/env_parsing.c src/env/env_cleanup.c src/env/env_utils.c src/env/env_export.c src/env/env_debug.c
 SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c src/lexer/lexer_debug.c
-SRC += src/expand/expand.c src/expand/expand_false_var.c
+SRC += src/expand/expand.c src/expand/expand_false_var.c src/expand/expand_quotes.c
 OBJ = $(SRC:.c=.o)
 HEADERS = include/minishell.h
 

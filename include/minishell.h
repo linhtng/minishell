@@ -97,4 +97,7 @@ int		var_quote_status(char *string, int index, int q_status);
 /* expand_false_var */
 int		check_false_var(t_token *token, t_list **env_list);
 
+/* expand_quotes */
+int		apply_quoting_rules(t_token *token);
+
 #endif
