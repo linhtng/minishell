@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:58:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/28 20:56:36 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:13:31 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ char	**env_list_to_array(t_list *env_list)
 		env_list = env_list->next;
 		envptr++;
 	}
+	*envptr = NULL;
 	return (envp);
 }
