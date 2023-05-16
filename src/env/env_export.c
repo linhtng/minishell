@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:58:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/15 15:13:31 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:25:29 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,16 @@ void	free_env_array(char **envp)
 {
 	char	**ptr;
 
-	ptr = envp;
-	while (*ptr)
+	if (envp)
 	{
-		free(*ptr);
-		ptr++;
+		ptr = envp;
+		while (*ptr)
+		{
+			free(*ptr);
+			ptr++;
+		}
+		free(envp);
 	}
-	free(envp);
 }
 
 // convert env list to array to pass it to subprocesses via **envp argument
