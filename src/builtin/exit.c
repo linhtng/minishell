@@ -6,14 +6,14 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 17:49:29 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 18:19:43 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/16 18:04:16 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // exit builtin, accepts single argument to specify the exit status
-void	exit_shell(t_list **env_list, char *n)
+int	exit_shell(t_list **env_list, char *n)
 {
 	int	status;
 
