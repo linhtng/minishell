@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/17 15:48:44 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:55:36 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <limits.h>
 # include "libft.h"
 
-#ifndef PATH_MAX
-# define PATH_MAX 4096
-#endif
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
 
 enum	e_token_types
 {
