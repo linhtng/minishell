@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 21:35:35 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/01/18 14:28:06 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:41:51 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # define CONV_ARR_LEN 5
 
-# include <stdarg.h>
 # include "libft.h"
 
 typedef struct s_opts

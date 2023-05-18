@@ -6,13 +6,14 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:57:19 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/09 19:09:16 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:42:00 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <stdarg.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
@@ -83,5 +84,6 @@ int		ft_isintstr(char *str);
 void	*ft_intdup(void *n);
 double	ft_atof(const char *str);
 int		ft_isfloatstr(char *str);
+char	*ft_strmjoin(int n, ...);
 
 #endif
