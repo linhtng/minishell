@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 21:17:06 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:25:55 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,15 @@ typedef struct s_token
 	int				prev_type;
 }	t_token;
 
+typedef struct s_cmd
+{
+	char			*pathname;
+	char			**argv;
+}	t_cmd;
+
 /* utils */
 void	print_error(int n, ...);
+int		free_arr(char **arr);
 
 /* lexer */
 int		lexer(char *input, t_list **tokens);
@@ -67,6 +74,7 @@ void	free_tokens(t_list	*tokens);
 
 /* lexer_debug */
 void	print_tokens_list(t_list *list);
+void	print_cmd_list(t_list *list);
 
 /* env_parsing */
 char	**parse_variable(char *str);
@@ -99,5 +107,15 @@ int		check_false_var(t_token *token, t_list **env_list);
 
 /* expand_quotes */
 int		apply_quoting_rules(t_token *token);
+
+/* parser_commands */
+int		parse_commands(t_list **token, t_list **commands);
+
+/* parser_commands_utils */
+void	del_cmds(void *content);
+int		count_argv(t_list *token_lst);
+int		add_argv_cmd(t_token *token, char **argv, int *i);
+char	**ft_arrdup(char **src, int size);
+int		ft_arrlen(char **argv);
 
 #endif

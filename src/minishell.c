@@ -16,9 +16,11 @@ void	launch_prompt(char *input, char **envp)
 {
 	t_list	*tokens;
 	t_list	*env_list;
+	t_list	*cmds;
 
 	tokens = NULL;
 	env_list = NULL;
+	cmds = NULL;
 	parse_env(&env_list, envp);
 	input = readline("minishell$  ");
 	while (input != NULL && ft_strncmp(input, "exit", 5))
@@ -29,8 +31,14 @@ void	launch_prompt(char *input, char **envp)
 		{
 			if (expand(&tokens, &env_list))
 				print_tokens_list(tokens);
+			if (parse_commands(&tokens, &cmds))
+			{
+				printf("Command list:\n");
+				print_cmd_list(cmds);
+			}
 		}
 		ft_lstclear(&tokens, del_token);
+		ft_lstclear(&cmds, del_cmds);
 		free(input);
 		input = readline("minishell$  ");
 	}

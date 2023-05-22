@@ -46,6 +46,38 @@ void    print_tokens_list(t_list *list)
 		i++;
     }
 }
+
+void	print_arr(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i] != NULL)
+	{
+		printf("%s\n", arr[i]);
+		i++;
+	}
+}
+
+void    print_cmd_list(t_list *list)
+{
+    t_list	*ptr;
+	int		i;
+
+	ptr = list;
+	i = 1;
+	//printf("Command list:\n");
+	while (ptr)
+    {
+		printf("cmd number %d has argv list:\n", i);
+		print_arr(((t_cmd *) ptr->content)->argv);
+		printf("pathname: %s\n", ((t_cmd *) ptr->content)->pathname);
+		//printf("full_cmd: %s\n", ((t_cmd *) ptr->content)->full_cmd);
+		ptr = ptr->next;
+		i++;
+    }
+}
+
 /* 
 int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 {
