@@ -46,12 +46,16 @@ int	count_argv(t_list *token_lst)
 	return (count);
 }
 
-int	add_argv_cmd(t_token *token, char **argv, int *i)
+int	add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr)
 {
 	argv[*i] = ft_strdup(token->string);
 	if (!argv[*i])
+	{
+		free_arr(argv);
 		return (0);
+	}
 	(*i)++;
+	*token_ptr = (*token_ptr)->next;
 	return (1);
 }
 
@@ -71,6 +75,7 @@ char	**ft_arrdup(char **src, int size)
 		if (!arr_dup[i])
 		{
 			free_arr(arr_dup);
+			free_arr(src);
 			return (NULL);
 		}
 		i++;

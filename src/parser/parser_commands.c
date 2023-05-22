@@ -25,58 +25,74 @@ char	**init_argv_arr(t_list *token_lst)
 	return (argv);
 }
 
-char	**fill_argv(t_list *token_lst)
+char	**fill_argv(t_list *token_lst, t_list *tok_ptr, t_token *token)
 {
-	t_list	*token_ptr;
-	t_token	*token;
 	int		i;
 	char	**argv;
 
-	token_ptr = token_lst;
 	i = 0;
 	argv = init_argv_arr(token_lst);
-	token = ((t_token *) token_ptr->content);
-	while (token_ptr != NULL && token->type != PIPE)
+	if (argv)
 	{
-		token = ((t_token *) token_ptr->content);
-		if (token->type >= HERE_DOC)
+		while (tok_ptr != NULL && ((t_token *) tok_ptr->content)->type != PIPE)
 		{
-			if (token_ptr->next->next != NULL)
-				token_ptr = token_ptr->next;
-			else
-				break ;
+			token = ((t_token *) tok_ptr->content);
+			if (token->type >= HERE_DOC)
+			{
+				if (tok_ptr->next->next != NULL)
+					tok_ptr = tok_ptr->next->next;
+				else
+					break ;
+			}
+			else if (token->type == WORD || token->type == VAR)
+			{
+				if (!add_argv_cmd(token, argv, &i, &tok_ptr))
+					return (NULL);
+			}
 		}
-		else if (token->type == WORD || token->type == VAR)
-			add_argv_cmd(token, argv, &i);
-		token_ptr = token_ptr->next;
 	}
 	return (argv);
 }
 
-int	save_cmd_lst(t_list **commands, t_list *token_lst)
+int	add_cmd_lst(t_list **commands, t_cmd *new_cmd)
 {
 	t_list	*new_elem;
+
+	new_elem = NULL;
+	new_elem = ft_lstnew(new_cmd);
+	if (new_elem)
+	{
+		ft_lstadd_back(commands, new_elem);
+		return (1);
+	}
+	free_arr(new_cmd->argv);
+	free(new_cmd);
+	return (0);
+}
+
+int	save_cmd_lst(t_list **commands, t_list *token_lst, t_token *token)
+{
 	t_cmd	*new_cmd;
 	int		size;
 	char	**argv;
+	t_list	*token_ptr;
 
-	new_elem = NULL;
 	new_cmd = NULL;
 	new_cmd = (t_cmd *) malloc(sizeof(t_cmd));
 	if (new_cmd)
 	{
 		ft_bzero(new_cmd, sizeof(t_cmd));
-		argv = fill_argv(token_lst);
-		size = ft_arrlen(argv);
-		new_cmd->argv = ft_arrdup(argv, size);
-		if (!new_cmd->argv)
-			return (0);
-		new_cmd->pathname = new_cmd->argv[0];
-		new_elem = ft_lstnew(new_cmd);
-		if (new_elem)
+		token_ptr = token_lst;
+		argv = fill_argv(token_lst, token_ptr, token);
+		if (argv)
 		{
-			ft_lstadd_back(commands, new_elem);
-			return (1);
+			size = ft_arrlen(argv);
+			new_cmd->argv = ft_arrdup(argv, size);
+			if (new_cmd->argv)
+			{
+				new_cmd->pathname = new_cmd->argv[0];
+				return (add_cmd_lst(commands, new_cmd));
+			}
 		}
 	}
 	return (0);
@@ -86,18 +102,21 @@ int	parse_commands(t_list **token_lst, t_list **commands)
 {
 	t_list	*token_ptr;
 	t_token	*token;
-	int		i;
 
 	token_ptr = *token_lst;
 	if (!((t_token *) token_ptr->content)->string)
 		return (1);
-	i = 0;
-	save_cmd_lst(commands, *token_lst);
+	token = ((t_token *) token_ptr->content);
+	if (!save_cmd_lst(commands, *token_lst, token))
+		return (0);
 	while (token_ptr != NULL)
 	{
 		token = ((t_token *) token_ptr->content);
 		if (token->type == PIPE)
-			save_cmd_lst(commands, token_ptr->next);
+		{
+			if (!save_cmd_lst(commands, token_ptr->next, token))
+				return (0);
+		}
 		token_ptr = token_ptr->next;
 	}
 	return (1);

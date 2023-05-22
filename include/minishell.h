@@ -114,7 +114,7 @@ int		parse_commands(t_list **token, t_list **commands);
 /* parser_commands_utils */
 void	del_cmds(void *content);
 int		count_argv(t_list *token_lst);
-int		add_argv_cmd(t_token *token, char **argv, int *i);
+int		add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr);
 char	**ft_arrdup(char **src, int size);
 int		ft_arrlen(char **argv);
 
