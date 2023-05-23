@@ -62,6 +62,7 @@ void	print_arr(char **arr)
 void    print_cmd_list(t_list *list)
 {
     t_list	*ptr;
+	t_cmd	*cmd;
 	int		i;
 
 	ptr = list;
@@ -69,10 +70,12 @@ void    print_cmd_list(t_list *list)
 	//printf("Command list:\n");
 	while (ptr)
     {
+		cmd = ((t_cmd *) ptr->content);
 		printf("cmd number %d has argv list:\n", i);
-		print_arr(((t_cmd *) ptr->content)->argv);
-		printf("pathname: %s\n", ((t_cmd *) ptr->content)->pathname);
-		//printf("full_cmd: %s\n", ((t_cmd *) ptr->content)->full_cmd);
+		print_arr(cmd->argv);
+		printf("pathname: %s\n", cmd->pathname);
+		printf("full_cmd: %s\n", cmd->full_cmd);
+		printf("pipe_fds: %d, %d\n", cmd->pipe_fds[0], cmd->pipe_fds[1]);
 		ptr = ptr->next;
 		i++;
     }

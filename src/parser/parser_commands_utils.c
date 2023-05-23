@@ -15,6 +15,7 @@
 void	del_cmds(void *content)
 {
 	free_arr(((t_cmd *) content)->argv);
+	free(((t_cmd *) content)->full_cmd);
 	free(content);
 }
 
@@ -44,6 +45,36 @@ int	count_argv(t_list *token_lst)
 		token_ptr = token_ptr->next;
 	}
 	return (count);
+}
+
+char	**init_argv_arr(t_list *token_lst)
+{
+	char	**argv;
+	int		size;
+
+	size = count_argv(token_lst);
+	argv = (char **) malloc(sizeof(char *) * (size + 1));
+	if (!argv)
+		return (NULL);
+	ft_bzero(argv, size);
+	argv[size] = NULL;
+	return (argv);
+}
+
+int	parse_pipe(t_list *commands)
+{
+	t_cmd	*cmd;
+	int		pipe_fds[2];
+
+	cmd = ((t_cmd *) commands->content);
+	if (pipe(pipe_fds) != 0)
+	{
+		perror("Creating pipe failed.");
+		return (0);
+	}
+	cmd->pipe_fds[0] = pipe_fds[0];
+	cmd->pipe_fds[1] = pipe_fds[1];
+	return (1);
 }
 
 int	add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr)

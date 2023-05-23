@@ -11,20 +11,6 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-char	**init_argv_arr(t_list *token_lst)
-{
-	char	**argv;
-	int		size;
-
-	size = count_argv(token_lst);
-	argv = (char **) malloc(sizeof(char *) * (size + 1));
-	if (!argv)
-		return (NULL);
-	ft_bzero(argv, size);
-	argv[size] = NULL;
-	return (argv);
-}
-
 char	**fill_argv(t_list *token_lst, t_list *tok_ptr, t_token *token)
 {
 	int		i;
@@ -66,8 +52,35 @@ int	add_cmd_lst(t_list **commands, t_cmd *new_cmd)
 		return (1);
 	}
 	free_arr(new_cmd->argv);
+	free(new_cmd->full_cmd);
 	free(new_cmd);
 	return (0);
+}
+
+char	*get_full_cmd(t_list *token_lst)
+{
+	t_list	*token_ptr;
+	t_token	*token;
+	char	*full_cmd;
+
+	token_ptr = token_lst;
+	token = ((t_token *) token_ptr->content);
+	full_cmd = NULL;
+	full_cmd = ft_strdup(token->string);
+	if (!full_cmd)
+		return (NULL);
+	while (token_ptr->next != NULL && token->type != PIPE)
+	{
+		token_ptr = token_ptr->next;
+		token = ((t_token *) token_ptr->content);
+		if (token->type != PIPE)
+		{
+			full_cmd = mns_strjoin(mns_strjoin(full_cmd, " "), token->string);
+			if (!full_cmd)
+				return (NULL);
+		}
+	}
+	return (full_cmd);
 }
 
 int	save_cmd_lst(t_list **commands, t_list *token_lst, t_token *token)
@@ -85,7 +98,10 @@ int	save_cmd_lst(t_list **commands, t_list *token_lst, t_token *token)
 		if (new_cmd->argv)
 		{
 			new_cmd->pathname = new_cmd->argv[0];
-			return (add_cmd_lst(commands, new_cmd));
+			new_cmd->full_cmd = get_full_cmd(token_lst);
+			if (new_cmd->full_cmd)
+				return (add_cmd_lst(commands, new_cmd));
+			free_arr(new_cmd->argv);
 		}
 		free(new_cmd);
 	}
@@ -108,7 +124,12 @@ int	parse_commands(t_list **token_lst, t_list **commands)
 		token = ((t_token *) token_ptr->content);
 		if (token->type == PIPE)
 		{
-			if (!save_cmd_lst(commands, token_ptr->next, token))
+			if (parse_pipe(ft_lstlast(*commands)))
+			{
+				if (!save_cmd_lst(commands, token_ptr->next, token))
+					return (0);
+			}
+			else
 				return (0);
 		}
 		token_ptr = token_ptr->next;

@@ -51,6 +51,8 @@ typedef struct s_cmd
 {
 	char			*pathname;
 	char			**argv;
+	char			*full_cmd;
+	int				pipe_fds[2];
 }	t_cmd;
 
 /* utils */
@@ -113,9 +115,11 @@ int		parse_commands(t_list **token, t_list **commands);
 
 /* parser_commands_utils */
 void	del_cmds(void *content);
-int		count_argv(t_list *token_lst);
+char	**init_argv_arr(t_list *token_lst);
 int		add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr);
-char	**ft_arrdup(char **src, int size);
-int		ft_arrlen(char **argv);
+int		parse_pipe(t_list *commands);
+
+/* parser_utils */
+char	*mns_strjoin(char *s1, char const *s2);
 
 #endif
