@@ -73,8 +73,6 @@ int	add_cmd_lst(t_list **commands, t_cmd *new_cmd)
 int	save_cmd_lst(t_list **commands, t_list *token_lst, t_token *token)
 {
 	t_cmd	*new_cmd;
-	int		size;
-	char	**argv;
 	t_list	*token_ptr;
 
 	new_cmd = NULL;
@@ -83,17 +81,13 @@ int	save_cmd_lst(t_list **commands, t_list *token_lst, t_token *token)
 	{
 		ft_bzero(new_cmd, sizeof(t_cmd));
 		token_ptr = token_lst;
-		argv = fill_argv(token_lst, token_ptr, token);
-		if (argv)
+		new_cmd->argv = fill_argv(token_lst, token_ptr, token);
+		if (new_cmd->argv)
 		{
-			size = ft_arrlen(argv);
-			new_cmd->argv = ft_arrdup(argv, size);
-			if (new_cmd->argv)
-			{
-				new_cmd->pathname = new_cmd->argv[0];
-				return (add_cmd_lst(commands, new_cmd));
-			}
+			new_cmd->pathname = new_cmd->argv[0];
+			return (add_cmd_lst(commands, new_cmd));
 		}
+		free(new_cmd);
 	}
 	return (0);
 }
