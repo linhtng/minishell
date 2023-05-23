@@ -24,6 +24,8 @@
 #  define PATH_MAX 4096
 # endif
 
+int	exit_status;
+
 enum	e_token_types
 {
 	WORD,
