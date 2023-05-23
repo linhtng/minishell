@@ -16,7 +16,13 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdarg.h>
+# include <sys/stat.h>
+# include <limits.h>
 # include "libft.h"
+
+#ifndef PATH_MAX
+# define PATH_MAX 4096
+#endif
 
 enum	e_token_types
 {
@@ -58,6 +64,10 @@ typedef struct s_cmd
 /* utils */
 void	print_error(int n, ...);
 int		free_arr(char **arr);
+
+/* fs_utils */
+char	*get_curr_dir(void);
+int		ft_is_dir(const char *path);
 
 /* lexer */
 int		lexer(char *input, t_list **tokens);
@@ -123,6 +133,7 @@ int		parse_pipe(t_list *commands);
 char	*mns_strjoin(char *s1, char const *s2);
 
 /* builtins */
+int		cd(t_list **env_list, char *path);
 void	exit_shell(t_list **env_list, char *n);
 
 #endif
