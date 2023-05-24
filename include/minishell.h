@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/24 18:26:23 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:55:36 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #  define PATH_MAX 4096
 # endif
 
-int	exit_status;
+int	g_exit_status;
 
 enum	e_token_types
 {
@@ -60,8 +60,7 @@ typedef struct s_cmd
 	char			*pathname;
 	char			**argv;
 	char			*full_cmd;
-	int				read_fd;
-	int				write_fd;
+	int				pipe_fds[2];
 }	t_cmd;
 
 /* utils */
@@ -115,10 +114,13 @@ int		print_full_env(t_list *env_list);
 
 /* expand */
 int		expand(t_list **tokens, t_list **env_list);
-int		var_quote_status(char *string, int index, int q_status);
 
 /* expand_false_var */
 int		check_false_var(t_token *token, t_list **env_list);
+
+/* expand_exit_status */
+int		var_quote_status(char *string, int index, int q_status);
+int		expand_exit_status(t_token *token);
 
 /* expand_quotes */
 int		apply_quoting_rules(t_token *token);
