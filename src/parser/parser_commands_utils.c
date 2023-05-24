@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_commands_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 18:28:29 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/22 18:33:52 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:27:11 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int	parse_pipe(t_list *commands)
 		perror("Creating pipe failed.");
 		return (0);
 	}
-	cmd->pipe_fds[0] = pipe_fds[0];
-	cmd->pipe_fds[1] = pipe_fds[1];
+	cmd->read_fd = pipe_fds[0];
+	cmd->write_fd = pipe_fds[1];
 	return (1);
 }
 

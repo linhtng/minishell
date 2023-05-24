@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/20 18:53:43 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/04/20 18:53:45 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:29:08 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void    print_cmd_list(t_list *list)
 		print_arr(cmd->argv);
 		printf("pathname: %s\n", cmd->pathname);
 		printf("full_cmd: %s\n", cmd->full_cmd);
-		printf("pipe_fds: %d, %d\n", cmd->pipe_fds[0], cmd->pipe_fds[1]);
+		printf("read_fd: %d\n", cmd->read_fd);
+		printf("write_fd: %d\n", cmd->write_fd);
 		ptr = ptr->next;
 		i++;
     }

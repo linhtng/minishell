@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/17 15:55:36 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:26:23 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ typedef struct s_cmd
 	char			*pathname;
 	char			**argv;
 	char			*full_cmd;
-	int				pipe_fds[2];
+	int				read_fd;
+	int				write_fd;
 }	t_cmd;
 
 /* utils */
