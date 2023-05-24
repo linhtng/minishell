@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/22 19:25:55 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:55:36 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdarg.h>
+# include <sys/stat.h>
+# include <limits.h>
 # include "libft.h"
+
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
+
+int	exit_status;
 
 enum	e_token_types
 {
@@ -58,6 +66,10 @@ typedef struct s_cmd
 /* utils */
 void	print_error(int n, ...);
 int		free_arr(char **arr);
+
+/* fs_utils */
+char	*get_curr_dir(void);
+int		ft_is_dir(const char *path);
 
 /* lexer */
 int		lexer(char *input, t_list **tokens);
@@ -121,5 +133,14 @@ int		parse_pipe(t_list *commands);
 
 /* parser_utils */
 char	*mns_strjoin(char *s1, char const *s2);
+
+/* builtins */
+int		cd(t_list **env_list, char *path);
+int		echo(char **args);
+int		env(t_list *env_list);
+int		exit_shell(t_list **env_list, char *n);
+int		export(t_list **env_list, char **args);
+int		pwd(void);
+int		unset(t_list **env_list, char **args);
 
 #endif
