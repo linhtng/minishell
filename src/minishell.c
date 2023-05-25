@@ -12,15 +12,38 @@
 
 #include "minishell.h"
 
-void	launch_prompt(char *input, char **envp)
+int	parsing(t_list *env_list, char *input)
 {
 	t_list	*tokens;
-	t_list	*env_list;
 	t_list	*cmds;
+	int		ret;
 
 	tokens = NULL;
-	env_list = NULL;
 	cmds = NULL;
+	ret = 0;
+	if (lexer(input, &tokens))
+	{
+		if (expand(&tokens, &env_list))
+			print_tokens_list(tokens);
+		if (parse_commands(&tokens, &cmds))
+		{
+			printf("Command list:\n");
+			print_cmd_list(cmds);
+			//ret = execution(cmds, tokens);
+			ret = 1;
+		}
+	}
+	ft_lstclear(&tokens, del_token);
+	ft_lstclear(&cmds, del_cmds);
+	free(input);
+	return (ret);
+}
+
+void	launch_prompt(char *input, char **envp)
+{
+	t_list	*env_list;
+
+	env_list = NULL;
 	parse_env(&env_list, envp);
 	setup_signals();
 	input = readline("minishell$  ");
@@ -28,19 +51,8 @@ void	launch_prompt(char *input, char **envp)
 	{
 		if (ft_strlen(input) > 0)
 			add_history(input);
-		if (lexer(input, &tokens))
-		{
-			if (expand(&tokens, &env_list))
-				print_tokens_list(tokens);
-			if (parse_commands(&tokens, &cmds))
-			{
-				printf("Command list:\n");
-				print_cmd_list(cmds);
-			}
-		}
-		ft_lstclear(&tokens, del_token);
-		ft_lstclear(&cmds, del_cmds);
-		free(input);
+		if (!parsing(env_list, input))
+			g_exit_status = 1;
 		input = readline("minishell$  ");
 	}
 	if (input)
