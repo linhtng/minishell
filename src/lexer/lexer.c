@@ -69,7 +69,7 @@ int	save_token(char *input, int *i, t_token *token, t_list **token_lst)
 			if (!add_token_lst(token, input, WORD, token_lst))
 				return (-1);
 		}
-		if (type != SPACE && type != NULL_CHAR)
+		if (type != SPACE_CHAR && type != NULL_CHAR)
 		{
 			token->type = type;
 			if (!save_token_symbol(token, input, token_lst, i))

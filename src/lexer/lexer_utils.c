@@ -28,7 +28,7 @@ int	get_quote_status(char *input, int i, int status)
 int	token_type(char *input, int i)
 {
 	if (ft_isspace(input[i]))
-		return (SPACE);
+		return (SPACE_CHAR);
 	if (input[i] == '|')
 		return (PIPE);
 	if (input[i] == '<' && input[i + 1] == '<')

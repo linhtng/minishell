@@ -13,12 +13,14 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdarg.h>
 # include <sys/stat.h>
 # include <limits.h>
 # include "libft.h"
+# include <signal.h>
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -29,7 +31,7 @@ int	g_exit_status;
 enum	e_token_types
 {
 	WORD,
-	SPACE,
+	SPACE_CHAR,
 	VAR,
 	NULL_CHAR,
 	PIPE,
@@ -60,7 +62,8 @@ typedef struct s_cmd
 	char			*pathname;
 	char			**argv;
 	char			*full_cmd;
-	int				pipe_fds[2];
+	int				read_fd;
+	int				write_fd;
 }	t_cmd;
 
 /* utils */
@@ -145,5 +148,8 @@ int		exit_shell(t_list **env_list, char *n);
 int		export(t_list **env_list, char **args);
 int		pwd(void);
 int		unset(t_list **env_list, char **args);
+
+/* signals */
+void    setup_signals(void);
 
 #endif

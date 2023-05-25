@@ -26,7 +26,7 @@ void    print_tokens_list(t_list *list)
 		type_num = ((t_token *) ptr->content)->type;
 		if (type_num == WORD)
 			printf("WORD\n");
-		else if (type_num == SPACE)
+		else if (type_num == SPACE_CHAR)
 			printf("SPACE\n");
 		else if (type_num == PIPE)
 			printf("PIPE\n");

@@ -22,6 +22,7 @@ SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c
 SRC += src/expand/expand.c src/expand/expand_false_var.c src/expand/expand_quotes.c src/expand/expand_exit_status.c
 SRC += src/parser/parser_commands.c src/parser/parser_commands_utils.c src/parser/parser_utils.c
 SRC += src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c
+SRC += src/signal/signal.c
 OBJ = $(SRC:.c=.o)
 HEADERS = include/minishell.h
 
@@ -30,7 +31,7 @@ LIBFT_PATH = ./libft
 LIBFT = $(LIBFT_PATH)/libft.a
 
 LIBS = -Llibft -lft
-LIBS += -lreadline
+LIBS += -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include -lreadline
 
 .PHONY : all clean fclean re
 
@@ -40,7 +41,7 @@ $(NAME) : $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(LIBS) $(OBJ) -o $(NAME)
 
 %.o : %.c
-	$(CC) $(CFLAGS) -I $(HEADER_PATH) -I $(LIBFT_PATH) -c $< -o $@
+	$(CC) $(CFLAGS) -I ~/.brew/opt/readline/include -I $(HEADER_PATH) -I $(LIBFT_PATH) -c $< -o $@
 
 $(OBJ) : $(HEADERS)
 

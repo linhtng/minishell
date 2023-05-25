@@ -22,6 +22,7 @@ void	launch_prompt(char *input, char **envp)
 	env_list = NULL;
 	cmds = NULL;
 	parse_env(&env_list, envp);
+	setup_signals();
 	input = readline("minishell$  ");
 	while (input != NULL && ft_strncmp(input, "exit", 5))
 	{
