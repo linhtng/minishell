@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 19:28:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 19:52:22 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 21:20:40 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static int	change_dir(t_list **env_list, char *path)
 		update_envvar(env_list, "PWD", get_curr_dir());
 		return (1);
 	}
+	else
+		print_error(2, "cd: could not change directory: ", path);
 	return (0);
 }
 
@@ -50,6 +52,5 @@ int	cd(t_list **env_list, char *path)
 			if (change_dir(env_list, home_dir))
 				return (0);
 	}
-	print_error(2, "cd: could not change directory: ", path);
 	return (1);
 }
