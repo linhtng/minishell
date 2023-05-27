@@ -35,3 +35,29 @@ char	*mns_strjoin(char *s1, char const *s2)
 		free(s1);
 	return (res);
 }
+
+char	*get_full_cmd(t_list *token_lst)
+{
+	t_list	*token_ptr;
+	t_token	*token;
+	char	*full_cmd;
+
+	token_ptr = token_lst;
+	token = ((t_token *) token_ptr->content);
+	full_cmd = NULL;
+	full_cmd = ft_strdup(token->string);
+	if (!full_cmd)
+		return (NULL);
+	while (token_ptr->next != NULL && token->type != PIPE)
+	{
+		token_ptr = token_ptr->next;
+		token = ((t_token *) token_ptr->content);
+		if (token->type != PIPE)
+		{
+			full_cmd = mns_strjoin(mns_strjoin(full_cmd, " "), token->string);
+			if (!full_cmd)
+				return (NULL);
+		}
+	}
+	return (full_cmd);
+}

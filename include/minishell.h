@@ -135,10 +135,10 @@ int		parse_commands(t_list **token, t_list **commands);
 void	del_cmds(void *content);
 char	**init_argv_arr(t_list *token_lst);
 int		add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr);
-int		parse_pipe(t_list *commands);
+int		parse_pipe(t_list *commands, int *pipe_input);
 
 /* parser_utils */
-char	*mns_strjoin(char *s1, char const *s2);
+char	*get_full_cmd(t_list *token_lst);
 
 /* builtins */
 int		cd(t_list **env_list, char *path);
@@ -150,10 +150,11 @@ int		pwd(void);
 int		unset(t_list **env_list, char **args);
 
 /* signals */
-void    setup_signals(void);
+void	setup_signals(void);
+void	setup_signals_parent(void);
 
 /* exec */
-void 	executor(t_list	*env_list, t_list *cmd_list);
+void	executor(t_list	*env_list, t_list *cmd_list);
 
 /* exec_utils */
 int		cmd_is_builtin(char *path);

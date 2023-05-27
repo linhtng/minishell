@@ -24,12 +24,11 @@ int	parsing(t_list *env_list, char *input)
 	if (lexer(input, &tokens))
 	{
 		if (expand(&tokens, &env_list))
-			print_tokens_list(tokens);
+			//print_tokens_list(tokens);
 		if (parse_commands(&tokens, &cmds))
 		{
-			printf("Command list:\n");
-			print_cmd_list(cmds);
-			//ret = execution(cmds, tokens);
+			//printf("Command list:\n");
+			//print_cmd_list(cmds);
 			ret = 1;
 		}
 		printf("Exec output:\n");
@@ -49,6 +48,7 @@ void	launch_prompt(char *input, char **envp)
 	parse_env(&env_list, envp);
 	setup_signals();
 	input = readline("minishell$  ");
+	//setup_signals_parent();
 	while (input != NULL && ft_strncmp(input, "exit", 5))
 	{
 		if (ft_strlen(input) > 0)

@@ -35,7 +35,7 @@ void	setup_signals(void)
 
 void	sig_handler_parent(int signum)
 {
-	if (signum == SIGINT)
+	if (signum == SIGINT || signum == SIGQUIT)
 		rl_on_new_line();
 }
 
@@ -46,5 +46,5 @@ void	setup_signals_parent(void)
 	ft_bzero(&sigact, sizeof(sigact));
 	sigact.sa_handler = &sig_handler_parent;
 	sigaction(SIGINT, &sigact, 0);
-	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGQUIT, &sigact, 0);
 }

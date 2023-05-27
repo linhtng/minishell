@@ -16,6 +16,17 @@ void	del_cmds(void *content)
 {
 	free_arr(((t_cmd *) content)->argv);
 	free(((t_cmd *) content)->full_cmd);
+	if (((t_cmd *) content)->read_fd != STDIN_FILENO)
+	{
+		close(((t_cmd *) content)->read_fd);
+		((t_cmd *) content)->read_fd = STDIN_FILENO;
+	}
+	if (((t_cmd *) content)->write_fd != STDOUT_FILENO
+		&& ((t_cmd *) content)->write_fd != STDIN_FILENO)
+	{
+		close(((t_cmd *) content)->write_fd);
+		((t_cmd *) content)->write_fd = STDOUT_FILENO;
+	}
 	free(content);
 }
 
@@ -61,7 +72,7 @@ char	**init_argv_arr(t_list *token_lst)
 	return (argv);
 }
 
-int	parse_pipe(t_list *commands)
+int	parse_pipe(t_list *commands, int *pipe_input)
 {
 	t_cmd	*cmd;
 	int		pipe_fds[2];
@@ -72,7 +83,7 @@ int	parse_pipe(t_list *commands)
 		perror("Creating pipe failed.");
 		return (0);
 	}
-	cmd->read_fd = pipe_fds[0];
+	*pipe_input = pipe_fds[0];
 	cmd->write_fd = pipe_fds[1];
 	return (1);
 }
