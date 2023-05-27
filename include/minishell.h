@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 18:00:13 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:36:56 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <string.h>
 # include "libft.h"
 # include <signal.h>
+# include <fcntl.h>
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -139,6 +140,9 @@ int		parse_pipe(t_list *commands, int *pipe_input);
 
 /* parser_utils */
 char	*get_full_cmd(t_list *token_lst);
+
+/* parser_redirects */
+int		get_redirects(t_list *token_lst, t_cmd **cmd);
 
 /* builtins */
 int		cd(t_list **env_list, char *path);

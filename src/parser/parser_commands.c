@@ -6,9 +6,10 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 19:09:42 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/22 18:34:38 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/27 20:31:37 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 char	**fill_argv(t_list *token_lst, t_list *tok_ptr, t_token *token)
@@ -75,7 +76,8 @@ int	save_cmd_lst(t_list **cmds, t_list *tokens, t_token *token, int pipe_input)
 			new_cmd->pathname = new_cmd->argv[0];
 			new_cmd->full_cmd = get_full_cmd(tokens);
 			if (new_cmd->full_cmd)
-				return (add_cmd_lst(cmds, new_cmd));
+				if (get_redirects(tokens, &new_cmd))
+					return (add_cmd_lst(cmds, new_cmd));
 			free_arr(new_cmd->argv);
 		}
 		free(new_cmd);
