@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 17:57:52 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 21:13:13 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 {
 	//setup_signals_parent();
 	if (!redirect_streams(cmd->write_fd, cmd->read_fd))
-		exit(1);
+		return (1);
 	else
-		exit(run_builtin(env_list, cmd->pathname, cmd->argv));
+		return (run_builtin(env_list, cmd->pathname, cmd->argv));
 }
 
 static int	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
@@ -37,11 +37,7 @@ static int	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
 	int		status;
 
 	if (cmd_is_builtin(cmd->pathname))
-	{
-		child = fork();
-		if (child == 0)
-			exec_builtin(cmd, env_list);
-	}
+		status = exec_builtin(cmd, env_list);
 	else
 	{
 		*cmd_path = expand_path(env_list, cmd->pathname);
@@ -53,10 +49,10 @@ static int	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
 		child = fork();
 		if (child == 0)
 			exec_path(cmd, *cmd_path, *envp);
+		waitpid(child, &status, 0);
+		if (WIFEXITED(status))
+			status = WEXITSTATUS(status);
 	}
-	waitpid(child, &status, 0);
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
 	return (status);
 }
 
