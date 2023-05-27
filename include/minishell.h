@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 17:37:00 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:00:13 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdarg.h>
 # include <sys/stat.h>
-# include <limits.h>
 # include <errno.h>
 # include <string.h>
 # include "libft.h"
