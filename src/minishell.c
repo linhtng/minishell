@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 20:02:49 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/28 20:45:36 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:39:08 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	parsing(t_list *env_list, char *input)
 			//ret = execution(cmds, tokens);
 			ret = 1;
 		}
+		printf("Exec output:\n");
+		executor(env_list, cmds);
 	}
 	ft_lstclear(&tokens, del_token);
 	ft_lstclear(&cmds, del_cmds);

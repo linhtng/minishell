@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/17 15:55:36 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:37:00 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdarg.h>
 # include <sys/stat.h>
 # include <limits.h>
+# include <errno.h>
+# include <string.h>
 # include "libft.h"
 # include <signal.h>
 
@@ -151,5 +153,15 @@ int		unset(t_list **env_list, char **args);
 
 /* signals */
 void    setup_signals(void);
+
+/* exec */
+void 	executor(t_list	*env_list, t_list *cmd_list);
+
+/* exec_utils */
+int		cmd_is_builtin(char *path);
+int		run_builtin(t_list	*env_list, char *path, char **full_cmd);
+char	*expand_path(t_list *env_list, char *cmd);
+void	close_redirects(int *write_fd, int *read_fd);
+int		redirect_streams(int write_fd, int read_fd);
 
 #endif
