@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/26 19:18:57 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:14:58 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ char	*expand_path(t_list *env_list, char *cmd)
 // close files opened for redirections, and reset the fd variables
 void	close_redirects(int *write_fd, int *read_fd)
 {
-	if (*write_fd != STDOUT_FILENO)
+	if (*write_fd != 0 && *write_fd != STDOUT_FILENO)
 	{
 		close(*write_fd);
 		*write_fd = STDOUT_FILENO;
 	}
-	if (*read_fd != STDIN_FILENO)
+	if (*read_fd != 0 && *read_fd != STDIN_FILENO)
 	{
 		close(*read_fd);
 		*read_fd = STDIN_FILENO;
