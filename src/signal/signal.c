@@ -11,40 +11,29 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	sig_handler(int signum)
+void	close_echoctl(struct termios *t)
 {
-	if (signum == SIGINT)
-	{
-		ft_putchar_fd('\n', 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-		g_exit_status = 1;
-	}
+	t->c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, t);
 }
 
-void	setup_signals(void)
+void	reset_echoctl(struct termios *t)
+{
+	t->c_lflag |= ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, t);
+}
+
+void	ctrl_d_signal(void)
+{
+	ft_putstr_fd("exit\n", 1);
+	exit(EXIT_FAILURE);
+}
+
+void	sigquit_child(void)
 {
 	struct sigaction	sigact;
 
 	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = &sig_handler;
-	sigaction(SIGINT, &sigact, 0);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	sig_handler_parent(int signum)
-{
-	if (signum == SIGINT || signum == SIGQUIT)
-		rl_on_new_line();
-}
-
-void	setup_signals_parent(void)
-{
-	struct sigaction	sigact;
-
-	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = &sig_handler_parent;
-	sigaction(SIGINT, &sigact, 0);
+	sigact.sa_handler = SIG_DFL;
 	sigaction(SIGQUIT, &sigact, 0);
 }

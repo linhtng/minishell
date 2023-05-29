@@ -22,6 +22,7 @@
 # include "libft.h"
 # include <signal.h>
 # include <fcntl.h>
+# include <termios.h>
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -150,8 +151,14 @@ int		pwd(void);
 int		unset(t_list **env_list, char **args);
 
 /* signals */
+void	close_echoctl(struct termios *t);
+void	reset_echoctl(struct termios *t);
+void	ctrl_d_signal(void);
+void	sigquit_child(void);
+
+/* signals_setup */
 void	setup_signals(void);
-void	setup_signals_parent(void);
+void	setup_signals_child(void);
 
 /* exec */
 void	executor(t_list	*env_list, t_list *cmd_list);

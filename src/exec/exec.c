@@ -14,7 +14,6 @@
 
 static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 {
-	//setup_signals_parent();
 	if (!redirect_streams(cmd->write_fd, cmd->read_fd))
 		return (1);
 	else
@@ -23,7 +22,7 @@ static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 
 static int	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 {
-	//setup_signals_parent();
+	sigquit_child();
 	if (!redirect_streams(cmd->write_fd, cmd->read_fd))
 		exit(1);
 	if (execve(cmd_path, cmd->argv, envp) == -1)
@@ -46,6 +45,7 @@ static int	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
 		if (!*cmd_path)
 			return (127);
 		*envp = env_list_to_array(env_list);
+		setup_signals_child();
 		child = fork();
 		if (child == 0)
 			exec_path(cmd, *cmd_path, *envp);
