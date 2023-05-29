@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 21:13:13 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/29 18:36:49 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,22 @@ static int	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 	exit(1);
 }
 
-static int	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
+void	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
 {
 	pid_t	child;
 	int		status;
 
 	if (cmd_is_builtin(cmd->pathname))
-		status = exec_builtin(cmd, env_list);
+		g_exit_status = exec_builtin(cmd, env_list);
 	else
 	{
 		*cmd_path = expand_path(env_list, cmd->pathname);
 		if (!*cmd_path)
+		{
 			print_error(2, "command not found: ", cmd->pathname);
-		if (!*cmd_path)
-			return (127);
+			g_exit_status = 127;
+			return ;
+		}
 		*envp = env_list_to_array(env_list);
 		setup_signals_child();
 		child = fork();
@@ -51,9 +53,8 @@ static int	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
 			exec_path(cmd, *cmd_path, *envp);
 		waitpid(child, &status, 0);
 		if (WIFEXITED(status))
-			status = WEXITSTATUS(status);
+			g_exit_status = WEXITSTATUS(status);
 	}
-	return (status);
 }
 
 void	executor(t_list	*env_list, t_list *cmd_list)
@@ -67,7 +68,7 @@ void	executor(t_list	*env_list, t_list *cmd_list)
 		cmd = cmd_list->content;
 		envp = NULL;
 		cmd_path = NULL;
-		g_exit_status = exec(cmd, env_list, &cmd_path, &envp);
+		exec(cmd, env_list, &cmd_path, &envp);
 		close_redirects(&cmd->write_fd, &cmd->read_fd);
 		if (envp)
 			free_env_array(envp);
