@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 19:36:56 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/29 18:48:23 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int		get_redirects(t_list *token_lst, t_cmd **cmd);
 int		cd(t_list **env_list, char *path);
 int		echo(char **args);
 int		env(t_list *env_list);
-int		exit_shell(t_list **env_list, char *n);
+int		exit_shell(t_list **env_list, char **args);
 int		export(t_list **env_list, char **args);
 int		pwd(void);
 int		unset(t_list **env_list, char **args);
