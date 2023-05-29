@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/29 18:36:49 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:22:05 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,19 @@
 
 static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 {
+	int	ret;
+	int	stdin;
+	int	stdout;
+
+	stdin = dup(STDIN_FILENO);
+	stdout = dup(STDOUT_FILENO);
 	if (!redirect_streams(cmd->write_fd, cmd->read_fd))
-		return (1);
+		ret = 1;
 	else
-		return (run_builtin(env_list, cmd->pathname, cmd->argv));
+		ret = run_builtin(env_list, cmd->pathname, cmd->argv);
+	dup2(stdin, STDIN_FILENO);
+	dup2(stdout, STDOUT_FILENO);
+	return (ret);
 }
 
 static int	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
