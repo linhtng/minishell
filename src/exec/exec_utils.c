@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/27 18:14:58 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/29 15:58:13 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*expand_path(t_list *env_list, char *cmd)
 	int		i;
 
 	if (access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
-		return (cmd);
+		return (ft_strdup(cmd));
 	path_array = ft_split(get_envvar(&env_list, "PATH"), ':');
 	path = NULL;
 	i = 0;
