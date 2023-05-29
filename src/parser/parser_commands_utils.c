@@ -15,7 +15,6 @@
 void	del_cmds(void *content)
 {
 	free_arr(((t_cmd *) content)->argv);
-	free(((t_cmd *) content)->full_cmd);
 	if (((t_cmd *) content)->read_fd != STDIN_FILENO)
 	{
 		close(((t_cmd *) content)->read_fd);

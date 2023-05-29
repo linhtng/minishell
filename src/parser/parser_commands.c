@@ -53,7 +53,6 @@ int	add_cmd_lst(t_list **commands, t_cmd *new_cmd)
 		return (1);
 	}
 	free_arr(new_cmd->argv);
-	free(new_cmd->full_cmd);
 	free(new_cmd);
 	return (0);
 }
@@ -74,10 +73,8 @@ int	save_cmd_lst(t_list **cmds, t_list *tokens, t_token *token, int pipe_input)
 		if (new_cmd->argv)
 		{
 			new_cmd->pathname = new_cmd->argv[0];
-			new_cmd->full_cmd = get_full_cmd(tokens);
-			if (new_cmd->full_cmd)
-				if (get_redirects(tokens, &new_cmd))
-					return (add_cmd_lst(cmds, new_cmd));
+			if (get_redirects(tokens, &new_cmd))
+				return (add_cmd_lst(cmds, new_cmd));
 			free_arr(new_cmd->argv);
 		}
 		free(new_cmd);

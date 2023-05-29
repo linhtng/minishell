@@ -74,7 +74,6 @@ void    print_cmd_list(t_list *list)
 		printf("cmd number %d has argv list:\n", i);
 		print_arr(cmd->argv);
 		printf("pathname: %s\n", cmd->pathname);
-		printf("full_cmd: %s\n", cmd->full_cmd);
 		printf("read_fd: %d\n", cmd->read_fd);
 		printf("write_fd: %d\n", cmd->write_fd);
 		ptr = ptr->next;

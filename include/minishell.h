@@ -62,7 +62,6 @@ typedef struct s_cmd
 {
 	char			*pathname;
 	char			**argv;
-	char			*full_cmd;
 	int				read_fd;
 	int				write_fd;
 }	t_cmd;
@@ -137,9 +136,6 @@ void	del_cmds(void *content);
 char	**init_argv_arr(t_list *token_lst);
 int		add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr);
 int		parse_pipe(t_list *commands, int *pipe_input);
-
-/* parser_utils */
-char	*get_full_cmd(t_list *token_lst);
 
 /* parser_redirects */
 int		get_redirects(t_list *token_lst, t_cmd **cmd);
