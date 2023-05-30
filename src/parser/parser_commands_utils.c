@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 18:28:29 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/24 18:27:11 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:15:52 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int	parse_pipe(t_list *commands, int *pipe_input)
 		return (0);
 	}
 	*pipe_input = pipe_fds[0];
+	if (cmd->write_fd != 0 && cmd->write_fd != STDOUT_FILENO)
+		close(cmd->write_fd);
 	cmd->write_fd = pipe_fds[1];
 	return (1);
 }
