@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 16:32:10 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/30 19:58:53 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:12:34 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	del_envvar(t_list **env_list, t_list *var_node)
 	t_list	*lst;
 	t_list	*prev;
 
+	if (!env_list || !var_node)
+		return ;
 	lst = *env_list;
 	prev = NULL;
 	while (lst)
