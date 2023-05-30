@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/30 19:52:00 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:21:21 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	executor(t_list	*env_list, t_list *cmd_list)
 	char	*cmd_path;
 	char	**envp;
 
-	if (!env_list || !cmd_list)
+	if (!cmd_list)
 		return ;
 	cmd = cmd_list->content;
 	if (!cmd_list->next && cmd_is_builtin(cmd->pathname))
