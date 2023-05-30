@@ -129,6 +129,12 @@ int		expand_exit_status(t_token *token);
 /* expand_quotes */
 int		apply_quoting_rules(t_token *token);
 
+/* expand_heredoc */
+int		expand_heredoc(char *input, t_list **env_list);
+
+/* expand_false_var */
+int		check_false_var_heredoc(char *input, t_list **env_list);
+
 /* parser_commands */
 int		parse_commands(t_list **token, t_list **commands);
 
@@ -159,6 +165,8 @@ void	sigquit_child(void);
 /* signals_setup */
 void	setup_signals(void);
 void	setup_signals_child(void);
+void	setup_signals_heredoc(void);
+void	ignore_sigquit(void);
 
 /* exec */
 void	executor(t_list	*env_list, t_list *cmd_list);

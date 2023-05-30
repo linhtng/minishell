@@ -63,9 +63,14 @@ static int	redirect_input(t_list **token_ptr, t_token **token, t_cmd **cmd)
 static int	heredoc_prompt(char *heredoc_delim, int heredoc_pipe)
 {
 	char	*input_buf;
+	struct termios	t;
 
+	tcgetattr(STDIN_FILENO, &t);
+	setup_signals_heredoc();
+	close_echoctl(&t);
 	ft_putstr_fd("heredoc> ", 1);
 	input_buf = get_next_line(STDIN_FILENO);
+	reset_echoctl(&t);
 	while (input_buf && (ft_strlen(input_buf) != (ft_strlen(heredoc_delim) + 1)
 			|| ft_strncmp(input_buf, heredoc_delim,
 				ft_strlen(heredoc_delim))) != 0)
@@ -77,9 +82,13 @@ static int	heredoc_prompt(char *heredoc_delim, int heredoc_pipe)
 			return (0);
 		}
 		free(input_buf);
+		close_echoctl(&t);
 		ft_putstr_fd("heredoc> ", 1);
 		input_buf = get_next_line(STDIN_FILENO);
+		reset_echoctl(&t);
 	}
+	if (!input_buf)
+			return (1);
 	if (input_buf)
 		free(input_buf);
 	return (1);
