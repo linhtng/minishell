@@ -66,8 +66,9 @@ static int	heredoc_prompt(char *heredoc_delim, int heredoc_pipe)
 
 	ft_putstr_fd("heredoc> ", 1);
 	input_buf = get_next_line(STDIN_FILENO);
-	while (ft_strlen(input_buf) != (ft_strlen(heredoc_delim) + 1)
-		|| ft_strncmp(input_buf, heredoc_delim, ft_strlen(heredoc_delim)) != 0)
+	while (input_buf && (ft_strlen(input_buf) != (ft_strlen(heredoc_delim) + 1)
+			|| ft_strncmp(input_buf, heredoc_delim,
+				ft_strlen(heredoc_delim))) != 0)
 	{
 		if (write(heredoc_pipe, input_buf, ft_strlen(input_buf)) == -1)
 		{
@@ -79,7 +80,8 @@ static int	heredoc_prompt(char *heredoc_delim, int heredoc_pipe)
 		ft_putstr_fd("heredoc> ", 1);
 		input_buf = get_next_line(STDIN_FILENO);
 	}
-	free(input_buf);
+	if (input_buf)
+		free(input_buf);
 	return (1);
 }
 
