@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/30 15:24:28 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:00:02 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 		ret = run_builtin(env_list, cmd->pathname, cmd->argv);
 	dup2(stdin, STDIN_FILENO);
 	dup2(stdout, STDOUT_FILENO);
+	close(stdin);
+	close(stdout);
 	return (ret);
 }
 
