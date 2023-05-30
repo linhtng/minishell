@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 16:32:10 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 18:39:03 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/30 19:58:53 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	clear_env_list(t_list **env_list)
 {
 	t_list	*lst;
 
+	if (!env_list)
+		return ;
 	lst = *env_list;
 	while (lst)
 	{
