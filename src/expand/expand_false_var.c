@@ -27,7 +27,7 @@ int	false_var_len(char *str)
 		return (1);
 	while (str[i])
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
+		if (!ft_isalnum(str[i]))
 			break ;
 		i++;
 		len++;
