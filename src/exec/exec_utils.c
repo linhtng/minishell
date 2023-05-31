@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/29 18:41:46 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:02:59 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ int	cmd_is_builtin(char *path)
 
 // executes builtin based on path and returns its status value
 // returns -1 if path is not a builtin command
-int	run_builtin(t_list	*env_list, char *path, char **argv)
+int	run_builtin(t_list	**env_list, char *path, char **argv)
 {
 	int	status;
 
 	if (!ft_strncmp("cd", path, 3))
-		status = cd(&env_list, argv[1]);
+		status = cd(env_list, argv[1]);
 	else if (!ft_strncmp("echo", path, 5))
 		status = echo(argv + 1);
 	else if (!ft_strncmp("env", path, 4))
-		status = env(env_list);
+		status = env(*env_list);
 	else if (!ft_strncmp("exit", path, 5))
-		status = exit_shell(&env_list, argv + 1);
+		status = exit_shell(env_list, argv + 1);
 	else if (!ft_strncmp("export", path, 7))
-		status = export(&env_list, argv + 1);
+		status = export(env_list, argv + 1);
 	else if (!ft_strncmp("pwd", path, 4))
 		status = pwd();
 	else if (!ft_strncmp("unset", path, 6))
-		status = unset(&env_list, argv + 1);
+		status = unset(env_list, argv + 1);
 	else
 		status = 1;
 	return (status);

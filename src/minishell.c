@@ -6,13 +6,13 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 20:02:49 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/29 18:24:45 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/31 21:23:13 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parsing(t_list *env_list, char *input)
+int	parsing(t_list **env_list, char *input)
 {
 	t_list	*tokens;
 	t_list	*cmds;
@@ -23,9 +23,9 @@ int	parsing(t_list *env_list, char *input)
 	ret = 0;
 	if (lexer(input, &tokens))
 	{
-		if (expand(&tokens, &env_list))
+		if (expand(&tokens, env_list))
 			//print_tokens_list(tokens);
-		if (parse_cmds(&tokens, &cmds, &env_list))
+		if (parse_cmds(&tokens, &cmds, env_list))
 		{
 			//printf("Command list:\n");
 			//print_cmd_list(cmds);
@@ -58,7 +58,7 @@ void	launch_prompt(char *input, char **envp)
 			ctrl_d_signal();
 		if (ft_strlen(input) > 0)
 			add_history(input);
-		if (!parsing(env_list, input))
+		if (!parsing(&env_list, input))
 			g_exit_status = 1;
 	}
 	clear_env_list(&env_list);

@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:58:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/31 17:44:47 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/31 18:59:30 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ char	**env_list_to_array(t_list *env_list)
 	while (env_list)
 	{
 		envvar = (char **)env_list->content;
-		*envptr = ft_strmjoin(3, envvar[0], "=", envvar[1]);
+		if (envvar[1])
+			*envptr = ft_strmjoin(3, envvar[0], "=", envvar[1]);
+		else if (ft_strncmp(envvar[0], "(", 2))
+			*envptr = ft_strdup(envvar[0]);
 		if (!*envptr)
 		{
 			free_env_array(envp);

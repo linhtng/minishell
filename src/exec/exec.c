@@ -6,13 +6,13 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/30 20:21:21 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/31 20:55:50 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
+static int	exec_builtin(t_cmd *cmd, t_list	**env_list)
 {
 	int	ret;
 	int	stdin;
@@ -31,7 +31,7 @@ static int	exec_builtin(t_cmd *cmd, t_list	*env_list)
 	return (ret);
 }
 
-static void	exec_builtin_child(t_cmd *cmd, t_list	*env_list)
+static void	exec_builtin_child(t_cmd *cmd, t_list **env_list)
 {
 	pid_t	child;
 
@@ -67,26 +67,26 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 		g_exit_status = WEXITSTATUS(status);
 }
 
-static void	exec(t_cmd *cmd, t_list	*env_list, char **cmd_path, char ***envp)
+static void	exec(t_cmd *cmd, t_list	**env_list, char **cmd_path, char ***envp)
 {
 	if (cmd_is_builtin(cmd->pathname))
 		exec_builtin_child(cmd, env_list);
 	else
 	{
-		*cmd_path = expand_path(env_list, cmd->pathname);
+		*cmd_path = expand_path(*env_list, cmd->pathname);
 		if (!*cmd_path)
 		{
 			print_error(2, "command not found: ", cmd->pathname);
 			g_exit_status = 127;
 			return ;
 		}
-		*envp = env_list_to_array(env_list);
+		*envp = env_list_to_array(*env_list);
 		setup_signals_child();
 		exec_path(cmd, *cmd_path, *envp);
 	}
 }
 
-void	executor(t_list	*env_list, t_list *cmd_list)
+void	executor(t_list	**env_list, t_list *cmd_list)
 {
 	t_cmd	*cmd;
 	char	*cmd_path;
