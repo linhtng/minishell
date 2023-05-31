@@ -57,10 +57,11 @@ int	add_cmd_lst(t_list **commands, t_cmd *new_cmd)
 	return (0);
 }
 
-int	save_cmd_lst(t_list **cmds, t_list *tokens, t_token *token, int pipe_input)
+int	save_cmd_lst(t_list **cmds, t_list *tokens, int pipe_rfd, t_list **env_list)
 {
 	t_cmd	*new_cmd;
 	t_list	*token_ptr;
+	t_token	*token;
 
 	new_cmd = NULL;
 	new_cmd = (t_cmd *) malloc(sizeof(t_cmd));
@@ -68,12 +69,13 @@ int	save_cmd_lst(t_list **cmds, t_list *tokens, t_token *token, int pipe_input)
 	{
 		ft_bzero(new_cmd, sizeof(t_cmd));
 		token_ptr = tokens;
+		token = ((t_token *) token_ptr->content);
 		new_cmd->argv = fill_argv(tokens, token_ptr, token);
-		new_cmd->read_fd = pipe_input;
+		new_cmd->read_fd = pipe_rfd;
 		if (new_cmd->argv)
 		{
 			new_cmd->pathname = new_cmd->argv[0];
-			if (get_redirects(tokens, &new_cmd))
+			if (get_redirects(tokens, &new_cmd, env_list))
 				return (add_cmd_lst(cmds, new_cmd));
 			free_arr(new_cmd->argv);
 		}
@@ -82,14 +84,14 @@ int	save_cmd_lst(t_list **cmds, t_list *tokens, t_token *token, int pipe_input)
 	return (0);
 }
 
-int	seperate_cmds(t_list **cmds, t_list *tokens, t_token *token, int *pipe_in)
+int	divide_cmds(t_list **cmds, t_list *tokens, int *pipe_in, t_list **env_list)
 {
 	t_list	*token_ptr;
 
 	token_ptr = tokens;
 	if (parse_pipe(ft_lstlast(*cmds), pipe_in))
 	{
-		if (!save_cmd_lst(cmds, token_ptr, token, *pipe_in))
+		if (!save_cmd_lst(cmds, token_ptr, *pipe_in, env_list))
 			return (0);
 	}
 	else
@@ -97,7 +99,7 @@ int	seperate_cmds(t_list **cmds, t_list *tokens, t_token *token, int *pipe_in)
 	return (1);
 }
 
-int	parse_commands(t_list **token_lst, t_list **commands)
+int	parse_cmds(t_list **token_lst, t_list **commands, t_list **env_list)
 {
 	t_list	*token_ptr;
 	t_token	*token;
@@ -107,15 +109,14 @@ int	parse_commands(t_list **token_lst, t_list **commands)
 	if (!((t_token *) token_ptr->content)->string)
 		return (1);
 	pipe_input = 0;
-	token = ((t_token *) token_ptr->content);
-	if (!save_cmd_lst(commands, *token_lst, token, pipe_input))
+	if (!save_cmd_lst(commands, *token_lst, pipe_input, env_list))
 		return (0);
 	while (token_ptr != NULL)
 	{
 		token = ((t_token *) token_ptr->content);
 		if (token->type == PIPE)
 		{
-			if (!seperate_cmds(commands, token_ptr->next, token, &pipe_input))
+			if (!divide_cmds(commands, token_ptr->next, &pipe_input, env_list))
 				return (0);
 		}
 		token_ptr = token_ptr->next;

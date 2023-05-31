@@ -25,7 +25,7 @@ int	parsing(t_list *env_list, char *input)
 	{
 		if (expand(&tokens, &env_list))
 			//print_tokens_list(tokens);
-		if (parse_commands(&tokens, &cmds))
+		if (parse_cmds(&tokens, &cmds, &env_list))
 		{
 			//printf("Command list:\n");
 			//print_cmd_list(cmds);

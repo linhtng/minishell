@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/29 18:48:23 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/31 17:44:29 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ enum	e_quote
 typedef struct s_token
 {
 	char			*string;
+	char			*ori_string;
 	int				len;
 	int				start_index;
 	int				type;
@@ -90,7 +91,7 @@ int		token_type(char *input, int i);
 void	del_token(void *content);
 void	free_tokens(t_list	*tokens);
 
-/* lexer_debug */
+/* debug */
 void	print_tokens_list(t_list *list);
 void	print_cmd_list(t_list *list);
 
@@ -118,6 +119,7 @@ int		print_full_env(t_list *env_list);
 
 /* expand */
 int		expand(t_list **tokens, t_list **env_list);
+int		get_envvar_len(char *str, char *var_name);
 
 /* expand_false_var */
 int		check_false_var(t_token *token, t_list **env_list);
@@ -130,13 +132,16 @@ int		expand_exit_status(t_token *token);
 int		apply_quoting_rules(t_token *token);
 
 /* expand_heredoc */
-int		expand_heredoc(char *input, t_list **env_list);
+int		expand_heredoc_var(char **input, t_list **env_list);
 
 /* expand_false_var */
-int		check_false_var_heredoc(char *input, t_list **env_list);
+int		check_false_var_heredoc(char **input, t_list **env_list);
+
+/* expand_exit_status */
+int		expand_exit_status_heredoc(char **input);
 
 /* parser_commands */
-int		parse_commands(t_list **token, t_list **commands);
+int		parse_cmds(t_list **token_lst, t_list **commands, t_list **env_list);
 
 /* parser_commands_utils */
 void	del_cmds(void *content);
@@ -145,7 +150,10 @@ int		add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr);
 int		parse_pipe(t_list *commands, int *pipe_input);
 
 /* parser_redirects */
-int		get_redirects(t_list *token_lst, t_cmd **cmd);
+int		get_redirects(t_list *token_lst, t_cmd **cmd, t_list **env_list);
+
+/* parser_redirects_heredoc */
+int		do_heredoc(t_list **tokens, t_token **token, t_cmd **cmd, t_list **env);
 
 /* builtins */
 int		cd(t_list **env_list, char *path);

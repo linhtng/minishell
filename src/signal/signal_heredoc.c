@@ -6,7 +6,7 @@
 /*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:43:11 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/30 15:43:23 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:17:41 by thuynguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -14,8 +14,7 @@
 void	sig_handler_heredoc(int signum)
 {
 	ft_putchar_fd('\n', 1);
-    (void) signum;
-    if (signum == SIGINT)
+	if (signum == SIGINT)
 		g_exit_status = 1;
 }
 

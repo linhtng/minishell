@@ -60,61 +60,7 @@ static int	redirect_input(t_list **token_ptr, t_token **token, t_cmd **cmd)
 	}
 }
 
-static int	heredoc_prompt(char *heredoc_delim, int heredoc_pipe)
-{
-	char	*input_buf;
-	struct termios	t;
-
-	tcgetattr(STDIN_FILENO, &t);
-	setup_signals_heredoc();
-	close_echoctl(&t);
-	ft_putstr_fd("heredoc> ", 1);
-	input_buf = get_next_line(STDIN_FILENO);
-	reset_echoctl(&t);
-	while (input_buf && (ft_strlen(input_buf) != (ft_strlen(heredoc_delim) + 1)
-			|| ft_strncmp(input_buf, heredoc_delim,
-				ft_strlen(heredoc_delim))) != 0)
-	{
-		if (write(heredoc_pipe, input_buf, ft_strlen(input_buf)) == -1)
-		{
-			print_error(1, "error writing heredoc buffer");
-			close(heredoc_pipe);
-			return (0);
-		}
-		free(input_buf);
-		close_echoctl(&t);
-		ft_putstr_fd("heredoc> ", 1);
-		input_buf = get_next_line(STDIN_FILENO);
-		reset_echoctl(&t);
-	}
-	if (!input_buf)
-			return (1);
-	if (input_buf)
-		free(input_buf);
-	return (1);
-}
-
-static int	do_the_heredoc(t_list **token_ptr, t_token **token, t_cmd **cmd)
-{
-	int	pipefd[2];
-
-	*token_ptr = (*token_ptr)->next;
-	*token = ((t_token *)(*token_ptr)->content);
-	if (pipe(pipefd) == -1)
-	{
-		print_error(1, "unable to create pipe for heredoc");
-		return (0);
-	}
-	if (!heredoc_prompt((*token)->string, pipefd[1]))
-		return (0);
-	close(pipefd[1]);
-	if ((*cmd)->read_fd != 0 && (*cmd)->read_fd != STDIN_FILENO)
-		close((*cmd)->read_fd);
-	(*cmd)->read_fd = pipefd[0];
-	return (1);
-}
-
-int	get_redirects(t_list *token_lst, t_cmd **cmd)
+int	get_redirects(t_list *token_lst, t_cmd **cmd, t_list **env_list)
 {
 	int		ret;
 	t_token	*token;
@@ -130,7 +76,7 @@ int	get_redirects(t_list *token_lst, t_cmd **cmd)
 		else if (token->type == INPUT)
 			ret = redirect_input(&token_lst, &token, cmd);
 		else if (token->type == HERE_DOC)
-			ret = do_the_heredoc(&token_lst, &token, cmd);
+			ret = do_heredoc(&token_lst, &token, cmd, env_list);
 		if (!ret)
 		{
 			close_redirects(&(*cmd)->write_fd, &(*cmd)->read_fd);
