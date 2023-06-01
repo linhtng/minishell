@@ -41,7 +41,7 @@ int	replace_var_value_heredoc(char **input, char **env_list, int len)
 	int		var_index;
 
 	var = ft_strnstr(*input, env_list[0], len);
-	if (!var)
+	if (!var || !env_list[1])
 		return (1);
 	while (var)
 	{

@@ -67,7 +67,7 @@ int	replace_var_value(t_token *token, char **env_list)
 	int		var_index;
 
 	var = ft_strnstr(token->string, env_list[0], token->len);
-	if (!var)
+	if (!var || !env_list[1])
 		return (1);
 	ptr = token->string;
 	while (var)
