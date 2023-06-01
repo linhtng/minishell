@@ -55,7 +55,7 @@ static int	redirect_input(t_list **token_ptr, t_token **token, t_cmd **cmd)
 	}
 	else
 	{
-		print_error(2, "unable to open file for writing: ", (*token)->string);
+		print_error(2, "unable to open file for reading: ", (*token)->string);
 		return (0);
 	}
 }
