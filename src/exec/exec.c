@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/01 16:13:08 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/05/31 20:55:50 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	executor(t_list	**env_list, t_list *cmd_list)
 	cmd = cmd_list->content;
 	if (!cmd_list->next && cmd_is_builtin(cmd->pathname))
 		g_exit_status = exec_builtin(cmd, env_list);
-	else if (ft_strlen(cmd->pathname) > 0 && !ft_isemptystr(cmd->pathname))
+	else
 	{
 		while (cmd_list)
 		{
