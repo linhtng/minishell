@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: thuynguy <thuynguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:54:05 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/25 20:55:42 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:40:51 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 void	close_echoctl(struct termios *t)
@@ -25,7 +26,7 @@ void	reset_echoctl(struct termios *t)
 
 void	ctrl_d_signal(void)
 {
-	ft_putstr_fd("exit\n", 1);
+	printf("exit\n");
 	exit(0);
 }
 

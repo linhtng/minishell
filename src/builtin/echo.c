@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:10:55 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 20:16:50 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:37:08 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	echo(char **args)
 		}
 		while (*args)
 		{
-			ft_putstr_fd(*args, 1);
+			printf("%s", *args);
 			args++;
 			if (*args)
-				ft_putchar_fd(' ', 1);
+				printf(" ");
 		}
 	}
 	if (!n)
-		ft_putchar_fd('\n', 1);
+		printf("\n");
 	return (0);
 }

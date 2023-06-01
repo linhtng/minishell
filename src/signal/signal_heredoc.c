@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   signal_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: thuynguy <thuynguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:43:11 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/30 18:17:41 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:41:00 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 void	sig_handler_heredoc(int signum)
 {
-	ft_putchar_fd('\n', 1);
+	printf("\n");
 	if (signum == SIGINT)
 		g_exit_status = 1;
 }

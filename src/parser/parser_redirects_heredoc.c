@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects_heredoc.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: thuynguy <thuynguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:35:56 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/05/31 18:03:53 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:43:52 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	heredoc_prompt_signal(char **input_buf)
@@ -18,7 +19,7 @@ static void	heredoc_prompt_signal(char **input_buf)
 	tcgetattr(STDIN_FILENO, &t);
 	setup_signals_heredoc();
 	close_echoctl(&t);
-	ft_putstr_fd("heredoc> ", 1);
+	printf("heredoc> ");
 	*input_buf = get_next_line(STDIN_FILENO);
 	reset_echoctl(&t);
 }

@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 17:49:29 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/30 17:48:37 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:34:48 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	exit_shell(t_list **env_list, char **args)
 	int	status;
 
 	status = 0;
-	ft_putstr_fd("exit\n", 1);
+	printf("exit\n");
 	if (args[0])
 	{
 		if (!ft_isnumstr(args[0]))
