@@ -71,7 +71,7 @@ static void	exec(t_cmd *cmd, t_list	**env_list, char **cmd_path, char ***envp)
 {
 	if (cmd_is_builtin(cmd->pathname))
 		exec_builtin_child(cmd, env_list);
-	else
+	else if (ft_strlen(cmd->pathname) > 0 && !ft_isemptystr(cmd->pathname))
 	{
 		*cmd_path = expand_path(*env_list, cmd->pathname);
 		if (!*cmd_path)
