@@ -63,7 +63,9 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 		exit(1);
 	}
 	waitpid(child, &status, 0);
-	if (WIFEXITED(status))
+	if (WIFSIGNALED(status))
+		g_exit_status = WTERMSIG(status);
+	else if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
 }
 
