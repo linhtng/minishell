@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 14:37:36 by jhenriks          #+#    #+#              #
-#    Updated: 2023/05/18 16:38:20 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/06/01 16:04:21 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_numlen.c ft_unumlen.c ft_uitoa.c \
 ft_hexlen.c ft_itohex.c ft_memjoin.c get_next_line.c ft_printf.c \
 ft_printf_conversions.c ft_printf_utils.c ft_lstprev.c ft_lstpos.c \
 ft_lstnbr.c ft_isnumstr.c ft_isintstr.c ft_intdup.c ft_atof.c ft_isfloatstr.c \
-ft_isspace.c ft_strmjoin.c
+ft_isspace.c ft_strmjoin.c ft_isemptystr.c
 OBJ = $(patsubst %.c,%.o,$(SRC))
 HEADER_PATH = .
 
