@@ -91,10 +91,6 @@ int		token_type(char *input, int i);
 void	del_token(void *content);
 void	free_tokens(t_list	*tokens);
 
-/* debug */
-void	print_tokens_list(t_list *list);
-void	print_cmd_list(t_list *list);
-
 /* env_parsing */
 char	**parse_variable(char *str);
 void	parse_env(t_list **env_list, char **envp);
@@ -113,9 +109,6 @@ int		update_envvar(t_list **env_list, char *name, char *value);
 /* env_export */
 void	free_env_array(char **envp);
 char	**env_list_to_array(t_list *env_list);
-
-/* env_debug */
-int		print_full_env(t_list *env_list);
 
 /* expand */
 int		expand(t_list **tokens, t_list **env_list);

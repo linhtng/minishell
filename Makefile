@@ -6,18 +6,18 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/06/03 18:41:15 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/06/03 19:30:40 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 AR = ar
 
-CFLAGS += -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS += -Wall -Wextra -Werror
 
 NAME = minishell
-SRC = src/minishell.c src/utils.c src/debug.c src/fs_utils.c
-SRC += src/env/env_parsing.c src/env/env_cleanup.c src/env/env_utils.c src/env/env_export.c src/env/env_debug.c
+SRC = src/minishell.c src/utils.c src/fs_utils.c
+SRC += src/env/env_parsing.c src/env/env_cleanup.c src/env/env_utils.c src/env/env_export.c
 SRC += src/lexer/lexer.c src/lexer/lexer_utils.c src/lexer/lexer_token_utils.c
 SRC += src/expand/expand.c src/expand/expand_false_var.c src/expand/expand_quotes.c src/expand/expand_exit_status.c \
 	src/expand/expand_heredoc.c src/expand/expand_heredoc_exit_status.c src/expand/expand_heredoc_false_var.c

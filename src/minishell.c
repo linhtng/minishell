@@ -23,16 +23,9 @@ int	parsing(t_list **env_list, char *input)
 	ret = 0;
 	if (lexer(input, &tokens))
 	{
-		//print_tokens_list(tokens);
-		if (expand(&tokens, env_list))
-			//print_tokens_list(tokens);
+		expand(&tokens, env_list);
 		if (parse_cmds(&tokens, &cmds, env_list))
-		{
-			//printf("Command list:\n");
-			//print_cmd_list(cmds);
 			ret = 1;
-		}
-		//printf("Exec output:\n");
 		executor(env_list, cmds);
 	}
 	ft_lstclear(&tokens, del_token);
