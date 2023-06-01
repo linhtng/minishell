@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 20:24:50 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:23:47 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	export(t_list **env_list, char **args)
 	t_list	*var_node;
 
 	retval = 0;
-	while (env_list && *env_list && *args)
+	while (*args)
 	{
 		var = parse_variable(*args);
 		if (!var)
