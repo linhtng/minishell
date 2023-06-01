@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:26:47 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/04/29 20:49:10 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/01 17:19:51 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,13 @@ t_list	*find_envvar(t_list **env_list, char *var)
 // getenv() replacement
 char	*get_envvar(t_list **env_list, char *var)
 {
+	t_list	*env_node;
 	char	**envvar;
 
-	envvar = (char **)find_envvar(env_list, var)->content;
+	env_node = find_envvar(env_list, var);
+	if (!env_node)
+		return (NULL);
+	envvar = (char **)env_node->content;
 	return (envvar[1]);
 }
 
