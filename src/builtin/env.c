@@ -20,7 +20,7 @@ int	env(t_list *env_list)
 	{
 		envvar = (char **)env_list->content;
 		if (envvar[1])
-			ft_printf("%s=%s\n", envvar[0], envvar[1]);
+			printf("%s=%s\n", envvar[0], envvar[1]);
 		if (env_list->next)
 			env(env_list->next);
 	}
