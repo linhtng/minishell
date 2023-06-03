@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 21:42:49 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:49:22 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,16 +108,15 @@ void	executor(t_list	**env_list, t_list *cmd_list)
 		return ;
 	child_list = NULL;
 	cmd = cmd_list->content;
-	if (!cmd->pathname)
-		return ;
-	if (!cmd_list->next && cmd_is_builtin(cmd->pathname))
+	if (!cmd_list->next && cmd->pathname && cmd_is_builtin(cmd->pathname))
 		g_exit_status = exec_builtin(cmd, env_list);
 	else
 	{
 		while (cmd_list)
 		{
 			cmd = cmd_list->content;
-			exec(cmd, env_list, &child_list);
+			if (cmd->pathname)
+				exec(cmd, env_list, &child_list);
 			close_redirects(&cmd->write_fd, &cmd->read_fd);
 			cmd_list = cmd_list->next;
 		}
