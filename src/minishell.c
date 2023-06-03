@@ -23,6 +23,7 @@ int	parsing(t_list **env_list, char *input)
 	ret = 0;
 	if (lexer(input, &tokens))
 	{
+		//print_tokens_list(tokens);
 		if (expand(&tokens, env_list))
 			//print_tokens_list(tokens);
 		if (parse_cmds(&tokens, &cmds, env_list))

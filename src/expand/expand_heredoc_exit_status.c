@@ -57,7 +57,7 @@ int	expand_exit_status_heredoc(char **input)
 
 	len = ft_strlen(*input);
 	var = ft_strnstr(*input, "$?", len);
-	if (!var)
+	if (!var || !len)
 		return (1);
 	exit_status = ft_itoa(g_exit_status);
 	if (!exit_status)

@@ -13,7 +13,7 @@
 CC = cc
 AR = ar
 
-CFLAGS += -Wall -Wextra -Werror -g3
+CFLAGS += -Wall -Wextra -Werror -g3 -fsanitize=address
 
 NAME = minishell
 SRC = src/minishell.c src/utils.c src/debug.c src/fs_utils.c

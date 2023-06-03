@@ -119,7 +119,6 @@ int		print_full_env(t_list *env_list);
 
 /* expand */
 int		expand(t_list **tokens, t_list **env_list);
-int		get_envvar_len(char *str, char *var_name);
 
 /* expand_false_var */
 int		check_false_var(t_token *token, t_list **env_list);
@@ -132,7 +131,7 @@ int		expand_exit_status(t_token *token);
 int		apply_quoting_rules(t_token *token);
 
 /* expand_heredoc */
-int		expand_heredoc_var(char **input, t_list **env_list);
+int		expand_heredoc(char **input, t_list **env_list);
 
 /* expand_false_var */
 int		check_false_var_heredoc(char **input, t_list **env_list);

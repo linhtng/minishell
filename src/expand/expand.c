@@ -12,77 +12,57 @@
 
 #include "minishell.h"
 
-int	get_enpanded_str(t_token *token, char *var, char **env_list)
+int	get_expanded_str(t_token *token, char *var, char **env_list, int env_len)
 {
-	char	*new_string;
+	char	*new_str;
 	int		new_len;
 	int		var_index;
-	int		var_name_len;
+	int		var_name;
 
-	new_len = token->len - ft_strlen(env_list[0]) + ft_strlen(env_list[1]);
-	new_string = (char *) malloc(sizeof(char) * new_len);
-	if (!new_string)
-		return (0);
-	ft_bzero(new_string, new_len);
-	var_index = (int)(var - token->string);
-	var_name_len = ft_strlen(env_list[0]);
-	ft_strlcat(new_string, token->string, var_index);
-	ft_strlcat(new_string, env_list[1], new_len);
-	ft_strlcat(new_string, &token->string[var_index + var_name_len], new_len);
+	var_name = ft_strlen(env_list[0]);
+	new_len = token->len - 1 - var_name + env_len;
+	if (new_len)
+	{
+		new_str = (char *) malloc(sizeof(char) * (new_len + 1));
+		if (!new_str)
+			return (0);
+		ft_bzero(new_str, new_len);
+		var_index = (int)(var - token->string);
+		ft_strlcat(new_str, token->string, var_index);
+		if (env_list[1])
+			ft_strlcat(new_str, env_list[1], new_len + 1);
+		ft_strlcat(new_str, &token->string[var_index + var_name], new_len + 1);
+	}
+	else
+		new_str = ft_strdup("");
 	free(token->string);
-	token->string = new_string;
+	token->string = new_str;
 	token->len = new_len;
 	return (1);
 }
 
-int	get_envvar_len(char *str, char *var_name)
-{
-	int		i;
-	int		len;
-	char	*var;
-
-	var = ft_strnstr(str, var_name, ft_strlen(str));
-	if (!ft_strchr(str, '$') || !var)
-		return (0);
-	i = (int)(var - str);
-	if (str[i - 1] != '$')
-		return (0);
-	len = 0;
-	if (ft_isdigit(str[i]) || str[i] == '?')
-		return (1);
-	while (str[i])
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			break ;
-		i++;
-		len++;
-	}
-	return (len);
-}
-
-int	replace_var_value(t_token *token, char **env_list)
+int	replace_var_value(t_token *token, char **env_list, int env_len)
 {
 	char	*var;
 	char	*ptr;
 	int		var_index;
 
 	var = ft_strnstr(token->string, env_list[0], token->len);
-	if (!var || !env_list[1])
+	if (!var)
 		return (1);
 	ptr = token->string;
 	while (var)
 	{
 		var_index = (int)(var - token->string);
-		if (var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE
-			&& get_envvar_len(ptr, env_list[0]) == (int) ft_strlen(env_list[0]))
+		if (var_index && token->string[var_index - 1] == '$'
+			&& var_quote_status(token->string, var_index, N_QUOTE) != IN_SQUOTE)
 		{
-			if (!get_enpanded_str(token, var, env_list))
+			if (!get_expanded_str(token, var, env_list, env_len))
 				return (0);
-			else
-				ptr = &(token->string[var_index - 1 + ft_strlen(env_list[1])]);
+			ptr = token->string;
 		}
 		else
-			ptr = &(token->string[var_index - 1 + ft_strlen(env_list[0])]);
+			ptr = &(token->string[var_index + ft_strlen(env_list[0])]);
 		var = ft_strnstr(ptr, env_list[0], token->len);
 	}
 	return (1);
@@ -91,20 +71,42 @@ int	replace_var_value(t_token *token, char **env_list)
 int	expand_var(t_token *token, t_list **env_list)
 {
 	t_list	*env_ptr;
+	int		env_len;
 
 	env_ptr = *env_list;
-	if (check_false_var(token, env_list))
-	{
-		while (env_ptr != NULL)
-		{	
-			if (!replace_var_value(token, env_ptr->content))
+	env_len = 0;
+	while (env_ptr != NULL)
+	{	
+		if (((char **) env_ptr->content)[1] != NULL)
+		{
+			env_len = ft_strlen(((char **) env_ptr->content)[1]);
+			if (!replace_var_value(token, env_ptr->content, env_len))
 				return (0);
-			env_ptr = env_ptr->next;
 		}
-		if (expand_exit_status(token))
-			return (1);
+		env_ptr = env_ptr->next;
 	}
+	if (expand_exit_status(token))
+		return (1);
 	return (0);
+}
+
+int	expand_empty_var(t_token *token, t_list **env_list)
+{
+	t_list	*env_ptr;
+	int		env_len;
+
+	env_ptr = *env_list;
+	env_len = 0;
+	while (env_ptr != NULL)
+	{	
+		if (((char **) env_ptr->content)[1] == NULL)
+		{
+			if (!replace_var_value(token, env_ptr->content, env_len))
+				return (0);
+		}
+		env_ptr = env_ptr->next;
+	}
+	return (1);
 }
 
 int	expand(t_list **tokens, t_list **env_list)
@@ -116,7 +118,9 @@ int	expand(t_list **tokens, t_list **env_list)
 	{
 		if (((t_token *) token_ptr->content)->type == VAR)
 		{
-			if (!expand_var(token_ptr->content, env_list))
+			if (!check_false_var(token_ptr->content, env_list)
+				|| !expand_empty_var(token_ptr->content, env_list)
+				|| !expand_var(token_ptr->content, env_list))
 				return (0);
 		}
 		if (!apply_quoting_rules(token_ptr->content))

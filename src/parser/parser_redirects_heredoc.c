@@ -36,7 +36,7 @@ int	heredoc_loop(t_token *token, int heredoc_pipe, t_list **env, char **input)
 	{
 		if (!ft_strchr(ori_delim, '\'') && !ft_strchr(ori_delim, '\"'))
 		{
-			if (!expand_heredoc_var(input, env))
+			if (!expand_heredoc(input, env))
 				return (0);
 		}
 		if (write(heredoc_pipe, *input, ft_strlen(*input)) == -1)
