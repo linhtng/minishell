@@ -69,30 +69,37 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 		g_exit_status = WEXITSTATUS(status);
 }
 
-static void	exec(t_cmd *cmd, t_list	**env_list, char **cmd_path, char ***envp)
+static void	exec(t_cmd *cmd, t_list	**env_list)
 {
+	char	*cmd_path;
+	char	**envp;
+
+	envp = NULL;
+	cmd_path = NULL;
 	if (cmd_is_builtin(cmd->pathname))
 		exec_builtin_child(cmd, env_list);
 	else if (ft_strlen(cmd->pathname) > 0 && !ft_isemptystr(cmd->pathname))
 	{
-		*cmd_path = expand_path(*env_list, cmd->pathname);
-		if (!*cmd_path)
+		cmd_path = expand_path(*env_list, cmd->pathname);
+		if (!cmd_path)
 		{
 			print_error(2, "command not found: ", cmd->pathname);
 			g_exit_status = 127;
 			return ;
 		}
-		*envp = env_list_to_array(*env_list);
+		envp = env_list_to_array(*env_list);
 		setup_signals_child();
-		exec_path(cmd, *cmd_path, *envp);
+		exec_path(cmd, cmd_path, envp);
+		if (envp)
+			free_env_array(envp);
+		if (cmd_path)
+			free(cmd_path);
 	}
 }
 
 void	executor(t_list	**env_list, t_list *cmd_list)
 {
 	t_cmd	*cmd;
-	char	*cmd_path;
-	char	**envp;
 
 	if (!cmd_list)
 		return ;
@@ -104,14 +111,8 @@ void	executor(t_list	**env_list, t_list *cmd_list)
 		while (cmd_list)
 		{
 			cmd = cmd_list->content;
-			envp = NULL;
-			cmd_path = NULL;
-			exec(cmd, env_list, &cmd_path, &envp);
+			exec(cmd, env_list);
 			close_redirects(&cmd->write_fd, &cmd->read_fd);
-			if (envp)
-				free_env_array(envp);
-			if (cmd_path)
-				free(cmd_path);
 			cmd_list = cmd_list->next;
 		}
 	}
