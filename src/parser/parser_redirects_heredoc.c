@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects_heredoc.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thuynguy <thuynguy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:35:56 by thuynguy          #+#    #+#             */
-/*   Updated: 2023/06/01 18:43:52 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:14:36 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	heredoc_prompt_signal(char **input_buf)
 	tcgetattr(STDIN_FILENO, &t);
 	setup_signals_heredoc();
 	close_echoctl(&t);
-	printf("heredoc> ");
+	ft_putstr_fd("heredoc> ", 1);
 	*input_buf = get_next_line(STDIN_FILENO);
 	reset_echoctl(&t);
 }
