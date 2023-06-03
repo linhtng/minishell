@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/01 18:23:47 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 20:28:34 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	export(t_list **env_list, char **args)
 		if (!check_envvar_name(var[0]))
 		{
 			print_error(4, "export: ", *args, ": ", "not a valid identifier");
+			free_envvar(var);
 			args++;
 			retval = 1;
 			continue ;
