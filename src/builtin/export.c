@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 22:36:22 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 22:41:02 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	export(t_list **env_list, char **args)
 	char	**var;
 
 	retval = 0;
+	if (!*args)
+		printf("Usage:\n\texport name[=word] ...\n");
 	while (*args)
 	{
 		var = parse_variable(*args);
