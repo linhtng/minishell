@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 19:28:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 19:23:29 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 19:35:37 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,12 @@ int	cd(t_list **env_list, char *path)
 	{
 		home_dir = get_envvar(env_list, "HOME");
 		if (home_dir)
+		{
 			if (change_dir(env_list, home_dir))
 				return (0);
+		}
+		else
+			print_error(1, "cd: HOME not set");
 	}
 	return (1);
 }
