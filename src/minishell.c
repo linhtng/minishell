@@ -30,7 +30,6 @@ int	parsing(t_list **env_list, char *input)
 	}
 	ft_lstclear(&tokens, del_token);
 	ft_lstclear(&cmds, del_cmds);
-	free(input);
 	return (ret);
 }
 
@@ -52,8 +51,11 @@ void	launch_prompt(char *input, char **envp)
 			ctrl_d_signal();
 		if (ft_strlen(input) > 0)
 			add_history(input);
-		if (!parsing(&env_list, input))
+		if (ft_isemptystr(input))
+			g_exit_status = 0;
+		else if (!parsing(&env_list, input))
 			g_exit_status = 1;
+		free(input);
 	}
 	clear_env_list(&env_list);
 }
@@ -63,6 +65,7 @@ int	main(int arc, char **arv, char **envp)
 	char	*input;
 
 	input = NULL;
+	g_exit_status = 0;
 	if (arc == 1 && arv)
 		launch_prompt(input, envp);
 	return (1);

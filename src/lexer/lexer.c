@@ -43,7 +43,7 @@ int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 
 int	save_token_symbol(t_token *token, char *input, t_list **token_lst, int *i)
 {
-	if (token_type(input, *i - 1) == 0)
+	if (*i && token_type(input, *i - 1) == 0)
 		token->start_index = *i;
 	token->len = 1;
 	if (token->type == HERE_DOC || token->type == OUTPUT_APP)
