@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:28:49 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/01 18:35:36 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 19:24:38 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 int	pwd(void)
 {
-	printf("%s\n", get_curr_dir());
+	char	*dir;
+
+	dir = get_curr_dir();
+	printf("%s\n", dir);
+	free(dir);
 	return (0);
 }

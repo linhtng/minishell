@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 19:28:35 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/02 19:51:51 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 19:24:15 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_curr_dir(void)
 	buf = (char *)malloc(PATH_MAX);
 	if (buf)
 	{
-		dir = getcwd(buf, PATH_MAX);
+		dir = ft_strdup(getcwd(buf, PATH_MAX));
 		free(buf);
 	}
 	return (dir);
