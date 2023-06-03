@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 18:41:59 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 18:57:33 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,21 @@ char	*expand_path(t_list *env_list, char *cmd)
 	if (path_array)
 		free(path_array);
 	return (path);
+}
+
+void	wait_children(t_list *child_list)
+{
+	int		status;
+	pid_t	*child;
+
+	while (child_list)
+	{
+		child = (pid_t *)(child_list->content);
+		waitpid(*child, &status, 0);
+		child_list = child_list->next;
+	}
+	if (WIFEXITED(status))
+		g_exit_status = WEXITSTATUS(status);
+	else if (!WIFSIGNALED(status))
+		g_exit_status = status;
 }
