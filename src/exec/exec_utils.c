@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 21:22:08 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:39:15 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	cmd_is_builtin(char *path)
 {
+	if (!path)
+		return (0);
 	if (!ft_strncmp("cd", path, 3)
 		|| !ft_strncmp("echo", path, 5)
 		|| !ft_strncmp("env", path, 4)
