@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 22:34:10 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 22:36:22 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ int	export(t_list **env_list, char **args)
 	{
 		var = parse_variable(*args);
 		if (!var)
+		{
+			print_error(2, "export: ", "could not allocate memory");
 			return (1);
+		}
 		if (check_envvar_name(var[0]))
 			add_envvar(env_list, var);
 		else
