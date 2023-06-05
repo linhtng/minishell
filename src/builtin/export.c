@@ -6,11 +6,27 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/05 20:48:51 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/05 21:01:18 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	print_full_env(t_list *env_list)
+{
+	char	**envvar;
+
+	if (env_list)
+	{
+		envvar = (char **)env_list->content;
+		if (envvar[1])
+			printf("%s=%s\n", envvar[0], envvar[1]);
+		else
+			printf("%s\n", envvar[0]);
+		if (env_list->next)
+			print_full_env(env_list->next);
+	}
+}
 
 static void	add_envvar(t_list **env_list, char **var)
 {
@@ -40,7 +56,7 @@ int	export(t_list **env_list, char **args)
 
 	retval = 0;
 	if (!*args)
-		printf("Usage:\n\texport name[=word] ...\n");
+		print_full_env(*env_list);
 	while (*args)
 	{
 		var = parse_variable(*args);
