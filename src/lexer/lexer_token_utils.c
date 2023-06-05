@@ -51,7 +51,8 @@ int	unexpected_operator(t_list **tokens)
 	{
 		prev_type = ((t_token *) ptr->content)->prev_type;
 		type = ((t_token *) ptr->content)->type;
-		if (prev_type >= PIPE && type >= PIPE)
+		if (prev_type >= PIPE && type >= PIPE
+			&& !(prev_type == PIPE && type > PIPE))
 		{
 			print_error(3, "syntax error near unexpected token `",
 				((t_token *) ptr->content)->string, "'");
