@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/05 19:45:02 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/03 22:41:02 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ static void	add_envvar(t_list **env_list, char **var)
 	t_list	*var_node;
 
 	var_node = find_envvar(env_list, var[0]);
-	if (var_node)
+	if (var_node && var[1])
 		del_envvar(env_list, var_node);
-	ft_lstadd_back(env_list, ft_lstnew(var));
+	if (!var_node || (var_node && var[1]))
+		ft_lstadd_back(env_list, ft_lstnew(var));
 }
 
 // export builtin
