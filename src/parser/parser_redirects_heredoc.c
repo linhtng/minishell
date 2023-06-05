@@ -81,7 +81,11 @@ int	do_heredoc(t_list **token_ptr, t_token **token, t_cmd **cmd, t_list **env)
 		return (0);
 	}
 	if (!heredoc_prompt(*token, pipefd[1], env))
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
 		return (0);
+	}
 	close(pipefd[1]);
 	if ((*cmd)->read_fd != 0 && (*cmd)->read_fd != STDIN_FILENO)
 		close((*cmd)->read_fd);
