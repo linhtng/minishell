@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:46:12 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/05 18:38:29 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/05 19:56:20 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,27 @@ char	**parse_variable(char *str)
 	return (var);
 }
 
+static void	get_shlvl(t_list **env_list)
+{
+	char	*shlvl;
+
+	shlvl = get_envvar(env_list, "SHLVL");
+	if (shlvl)
+	{
+		shlvl = ft_itoa(ft_atoi(shlvl) + 1);
+		update_envvar(env_list, "SHLVL", shlvl);
+		free(shlvl);
+	}
+	else
+		update_envvar(env_list, "SHLVL", "1");
+}
+
 // parses environment from main's **envp argument into a linked list **env_list
 // each environment variable is stored into malloced 2D array using ft_split
 // does not parse $_ or $OLDPWD
 void	parse_env(t_list **env_list, char **envp)
 {
 	char	**var;
-	char	*shlvl;
 
 	while (*envp)
 	{
@@ -66,9 +80,5 @@ void	parse_env(t_list **env_list, char **envp)
 			ft_lstadd_back(env_list, ft_lstnew(var));
 		envp++;
 	}
-	shlvl = get_envvar(env_list, "SHLVL");
-	if (shlvl)
-		update_envvar(env_list, "SHLVL", ft_itoa(ft_atoi(shlvl) + 1));
-	else
-		update_envvar(env_list, "SHLVL", "1");
+	get_shlvl(env_list);
 }
