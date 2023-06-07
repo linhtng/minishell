@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 19:28:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 19:35:37 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:16:12 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ int	cd(t_list **env_list, char *path)
 {
 	char	*home_dir;
 
-	if (path && *path)
+	if (path)
 	{
+		if (ft_strlen(path) == 0)
+			return (0);
 		if (change_dir(env_list, path))
 			return (0);
 	}
