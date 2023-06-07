@@ -111,6 +111,8 @@ int	lexer(char *input, t_list **tokens)
 {
 	int	quote_status;
 
+	while (ft_isspace(*input))
+		input++;
 	if (*input == '|')
 	{
 		print_error(1, "syntax error near unexpected token `|'");
