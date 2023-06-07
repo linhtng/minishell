@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/07 19:23:39 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:37:44 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ static void	exec_builtin_child(t_cmd *cmd, t_list **env_list,
 			exit (run_builtin(env_list, cmd->pathname, cmd->argv));
 	}
 	*childptr = child;
-	ft_lstadd_back(child_list, ft_lstnew(childptr));
+	if (!add_to_list(child_list, childptr))
+	{
+		free(childptr);
+		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
+	}
 }
 
 static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
@@ -78,7 +82,11 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
 		exit(1);
 	}
 	*childptr = child;
-	ft_lstadd_back(child_list, ft_lstnew(childptr));
+	if (!add_to_list(child_list, childptr))
+	{
+		free(childptr);
+		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
+	}
 }
 
 static void	exec(t_cmd *cmd, t_list	**env_list, t_list **child_list)
