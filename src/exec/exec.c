@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/07 19:20:12 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 19:23:39 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
 		if (!redirect_streams(cmd->write_fd, cmd->read_fd))
 			exit(1);
 		if (execve(cmd_path, cmd->argv, envp) == -1)
-			print_error(4, "exec error:", cmd->pathname, ": ", strerror(errno));
+			print_error(4, "exec: ", cmd->pathname, ": ", strerror(errno));
 		exit(1);
 	}
 	*childptr = child;
