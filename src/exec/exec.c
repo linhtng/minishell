@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 21:49:22 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 19:20:12 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ static void	exec_builtin_child(t_cmd *cmd, t_list **env_list,
 	pid_t	child;
 	pid_t	*childptr;
 
+	childptr = (pid_t *) malloc(sizeof(pid_t));
+	if (!childptr)
+	{
+		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
+		return ;
+	}
 	child = fork();
 	if (child == 0)
 	{
@@ -45,7 +51,6 @@ static void	exec_builtin_child(t_cmd *cmd, t_list **env_list,
 		else
 			exit (run_builtin(env_list, cmd->pathname, cmd->argv));
 	}
-	childptr = (pid_t *) malloc(sizeof(pid_t));
 	*childptr = child;
 	ft_lstadd_back(child_list, ft_lstnew(childptr));
 }
@@ -56,6 +61,12 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
 	pid_t	child;
 	pid_t	*childptr;
 
+	childptr = (pid_t *) malloc(sizeof(pid_t));
+	if (!childptr)
+	{
+		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
+		return ;
+	}
 	child = fork();
 	if (child == 0)
 	{
@@ -66,7 +77,6 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
 			print_error(4, "exec error:", cmd->pathname, ": ", strerror(errno));
 		exit(1);
 	}
-	childptr = (pid_t *) malloc(sizeof(pid_t));
 	*childptr = child;
 	ft_lstadd_back(child_list, ft_lstnew(childptr));
 }
