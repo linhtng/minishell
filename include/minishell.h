@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/03 21:26:26 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:01:30 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_cmd
 /* utils */
 void	print_error(int n, ...);
 int		free_arr(char **arr);
+int		add_to_list(t_list **list, void *content);
 
 /* fs_utils */
 char	*get_curr_dir(void);

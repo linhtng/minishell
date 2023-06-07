@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 16:48:31 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/05/22 19:26:47 by thuynguy         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:09:55 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,20 @@ int	free_arr(char **arr)
 	}
 	free(arr);
 	return (0);
+}
+
+int	add_to_list(t_list **list, void *content)
+{
+	t_list	*new_elem;
+
+	if (!list)
+		return (0);
+	new_elem = ft_lstnew(content);
+	if (new_elem)
+	{
+		ft_lstadd_back(list, new_elem);
+		return (1);
+	}
+	else
+		return (0);
 }
