@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:26:47 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/01 17:19:51 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:22:01 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,10 @@ int	update_envvar(t_list **env_list, char *name, char *value)
 	var_node = find_envvar(env_list, var[0]);
 	if (var_node)
 		del_envvar(env_list, var_node);
-	ft_lstadd_back(env_list, ft_lstnew(var));
+	if (!add_to_list(env_list, var))
+	{
+		free_envvar(var);
+		return (0);
+	}
 	return (1);
 }
