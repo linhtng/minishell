@@ -90,7 +90,7 @@ int		unexpected_newline(t_list **tokens);
 int		get_quote_status(char *input, int i, int status);
 int		token_type(char *input, int i);
 void	del_token(void *content);
-void	free_tokens(t_list	*tokens);
+void	free_token(t_token *token);
 
 /* env_parsing */
 char	**parse_variable(char *str);

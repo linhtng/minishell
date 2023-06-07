@@ -44,9 +44,20 @@ int	token_type(char *input, int i)
 	return (0);
 }
 
+void	free_token(t_token *token)
+{
+	if (token->string)
+		free(token->string);
+	if (token->ori_string)
+		free(token->ori_string);
+	free(token);
+}
+
 void	del_token(void *content)
 {
-	free(((t_token *) content)->string);
-	free(((t_token *) content)->ori_string);
+	if (((t_token *) content)->string)
+		free(((t_token *) content)->string);
+	if (((t_token *) content)->ori_string)
+		free(((t_token *) content)->ori_string);
 	free(content);
 }

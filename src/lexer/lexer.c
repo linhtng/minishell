@@ -30,13 +30,12 @@ int	add_token_lst(t_token *token, char *input, int type, t_list **tokens)
 			new_token->type = check_var_type(new_token, str_content, type);
 			new_token->ori_string = ft_strdup(str_content);
 			new_token->len = token->len;
-			new_elem = ft_lstnew(new_token);
-			if (new_elem)
-			{
-				ft_lstadd_back(tokens, new_elem);
+			if (add_to_list(tokens, new_token))
 				return (1);
-			}
+			free_token(new_token);
 		}
+		else
+			free(str_content);
 	}
 	return (0);
 }
