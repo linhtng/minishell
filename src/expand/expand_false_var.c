@@ -70,7 +70,7 @@ int	remove_false_var(t_token *token, int var_len, char *var)
 		ft_strlcat(new_str, &token->string[index + var_len + 1], new_len + 1);
 	}
 	else
-		new_str = ft_strdup("");
+		new_str = NULL;
 	free(token->string);
 	token->string = new_str;
 	token->len = new_len;
@@ -81,6 +81,8 @@ int	remove_var_conditions(char *string, char *var, t_list **env, int var_len)
 {
 	int	var_index;
 
+	if (!var_len)
+		return (0);
 	var_index = (int)(var - string);
 	if (var_quote_status(string, var_index, N_QUOTE) != IN_SQUOTE
 		&& has_false_var(&string[var_index + 1], env, var_len)
@@ -103,16 +105,16 @@ int	check_false_var(t_token *token, t_list **env_list)
 	while (var)
 	{
 		var_len = false_var_len(ptr);
-		if (var_len
-			&& remove_var_conditions(token->string, var, env_list, var_len))
+		if (remove_var_conditions(token->string, var, env_list, var_len))
 		{
 			if (!remove_false_var(token, var_len, var))
 				return (0);
-			else
-				ptr = token->string;
+			ptr = token->string;
 		}
 		else
 			ptr = &(token->string[(int)(var - token->string) + 1 + var_len]);
+		if (!ptr)
+			return (1);
 		var = ft_strchr(ptr, '$');
 	}
 	return (1);

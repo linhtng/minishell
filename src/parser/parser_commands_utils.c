@@ -50,7 +50,7 @@ int	count_argv(t_list *token_lst)
 			else
 				break ;
 		}
-		else if (token->type == WORD || token->type == VAR)
+		else if ((token->type == WORD || token->type == VAR) && token->string)
 			count++;
 		token_ptr = token_ptr->next;
 	}
@@ -91,13 +91,16 @@ int	parse_pipe(t_list *commands, int *pipe_input)
 
 int	add_argv_cmd(t_token *token, char **argv, int *i, t_list **token_ptr)
 {
-	argv[*i] = ft_strdup(token->string);
-	if (!argv[*i])
+	if (token->string)
 	{
-		free_arr(argv);
-		return (0);
+		argv[*i] = ft_strdup(token->string);
+		if (!argv[*i])
+		{
+			free_arr(argv);
+			return (0);
+		}
+		(*i)++;
 	}
-	(*i)++;
 	*token_ptr = (*token_ptr)->next;
 	return (1);
 }

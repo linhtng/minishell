@@ -65,6 +65,8 @@ int	apply_quoting_rules(t_token *token)
 	int		len;
 
 	i = 0;
+	if (!token->string)
+		return (1);
 	if (!ft_strchr(token->string, '\'') && !ft_strchr(token->string, '\"'))
 		return (1);
 	len = ft_strlen(token->string);

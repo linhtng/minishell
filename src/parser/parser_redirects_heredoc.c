@@ -26,15 +26,16 @@ static void	heredoc_prompt_signal(char **input_buf)
 
 int	heredoc_loop(t_token *token, int heredoc_pipe, t_list **env, char **input)
 {
-	char	*heredoc_delim;
-	char	*ori_delim;
-
-	heredoc_delim = token->string;
-	ori_delim = token->ori_string;
-	while (*input && (ft_strlen(*input) != (size_t)(token->len + 1)
-		|| ft_strncmp(*input, heredoc_delim, token->len)) != 0)
+	if (!token->string || !token->ori_string)
 	{
-		if (!ft_strchr(ori_delim, '\'') && !ft_strchr(ori_delim, '\"'))
+		close(heredoc_pipe);
+		return (0);
+	}
+	while (*input && (ft_strlen(*input) != (size_t)(token->len + 1)
+		|| ft_strncmp(*input, token->string, token->len)) != 0)
+	{
+		if (!ft_strchr(token->ori_string, '\'')
+			&& !ft_strchr(token->ori_string, '\"'))
 		{
 			if (!expand_heredoc(input, env))
 				return (0);
