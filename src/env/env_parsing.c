@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:46:12 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/05 19:56:20 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/07 20:27:45 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,14 @@ void	parse_env(t_list **env_list, char **envp)
 		if (!ft_strncmp(var[0], "_", 2) || !ft_strncmp(var[0], "OLDPWD", 7))
 			free_envvar(var);
 		else
-			ft_lstadd_back(env_list, ft_lstnew(var));
+		{
+			if (!add_to_list(env_list, var))
+			{
+				clear_env_list(env_list);
+				print_error(1, "Error while allocating memory for environment");
+				exit(1);
+			}
+		}
 		envp++;
 	}
 	get_shlvl(env_list);
