@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:46:12 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/07 20:27:45 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:36:47 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ static void	get_shlvl(t_list **env_list)
 	if (shlvl)
 	{
 		shlvl = ft_itoa(ft_atoi(shlvl) + 1);
+		if (!shlvl)
+		{
+			print_error(1, "Error allocating memory for SHLVL variable");
+			return ;
+		}
 		update_envvar(env_list, "SHLVL", shlvl);
 		free(shlvl);
 	}
