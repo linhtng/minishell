@@ -45,11 +45,16 @@ void	setup_signals(void)
 
 void	sig_handler_child(int signum)
 {
-	printf("\n");
 	if (signum == SIGINT)
+	{
 		g_exit_status = 130;
+		printf("\n");
+	}
 	else if (signum == SIGQUIT)
+	{
 		g_exit_status = 131;
+		ft_putstr_fd("Quit: 3\n", 2);
+	}
 }
 
 void	setup_signals_child(void)
