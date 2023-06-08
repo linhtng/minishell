@@ -167,7 +167,6 @@ void	sigquit_child(void);
 void	setup_signals(void);
 void	setup_signals_child(void);
 void	setup_signals_heredoc(void);
-void	ignore_sigquit(void);
 
 /* exec */
 void	executor(t_list	**env_list, t_list *cmd_list);

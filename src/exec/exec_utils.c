@@ -89,6 +89,7 @@ void	wait_children(t_list *child_list)
 	int		status;
 	pid_t	*child;
 
+	status = 0;
 	while (child_list)
 	{
 		child = (pid_t *)(child_list->content);
@@ -97,6 +98,12 @@ void	wait_children(t_list *child_list)
 	}
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
-	else if (!WIFSIGNALED(status))
-		g_exit_status = status;
+	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == 3)
+			ft_putstr_fd("Quit: 3\n", 2);
+		else if (WTERMSIG(status) == 11)
+			ft_putstr_fd("Segmentation fault: 11\n", 2);
+		g_exit_status = 128 + WTERMSIG(status);
+	}
 }

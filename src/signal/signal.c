@@ -26,15 +26,11 @@ void	reset_echoctl(struct termios *t)
 
 void	ctrl_d_signal(void)
 {
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 2);
 	exit(0);
 }
 
 void	sigquit_child(void)
 {
-	struct sigaction	sigact;
-
-	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = SIG_DFL;
-	sigaction(SIGQUIT, &sigact, 0);
+	signal(SIGQUIT, SIG_DFL);
 }

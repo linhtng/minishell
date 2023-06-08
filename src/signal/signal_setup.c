@@ -24,45 +24,19 @@ void	sig_handler(int signum)
 	}
 }
 
-void	ignore_sigquit(void)
-{
-	struct sigaction	sigact;
-
-	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sigact, 0);
-}
-
 void	setup_signals(void)
 {
-	struct sigaction	sigact;
-
-	ignore_sigquit();
-	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = &sig_handler;
-	sigaction(SIGINT, &sigact, 0);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	sig_handler_child(int signum)
 {
 	if (signum == SIGINT)
-	{
-		g_exit_status = 130;
-		printf("\n");
-	}
-	else if (signum == SIGQUIT)
-	{
-		g_exit_status = 131;
-		ft_putstr_fd("Quit: 3\n", 2);
-	}
+		ft_putstr_fd("\n", 2);
 }
 
 void	setup_signals_child(void)
 {
-	struct sigaction	sigact;
-
-	ft_bzero(&sigact, sizeof(sigact));
-	sigact.sa_handler = &sig_handler_child;
-	sigaction(SIGINT, &sigact, 0);
-	sigaction(SIGQUIT, &sigact, 0);
+	signal(SIGINT, sig_handler_child);
 }
