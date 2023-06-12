@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 17:21:37 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:44:33 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static void	exec_cmd_list(t_list **env_list, t_list *cmd_list)
 		cmd_list = cmd_list->next;
 	}
 	wait_children(child_arr, i);
+	free(child_arr);
 }
 
 void	executor(t_list **env_list, t_list *cmd_list)
