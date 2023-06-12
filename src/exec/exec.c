@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 15:47:06 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 16:28:50 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,9 @@ static int	exec_builtin(t_cmd *cmd, t_list	**env_list)
 	return (ret);
 }
 
-static void	exec_builtin_child(t_cmd *cmd, t_list **env_list,
-	t_list **child_list)
+static pid_t	exec_builtin_child(t_cmd *cmd, t_list **env_list)
 {
 	pid_t	child;
-	pid_t	*childptr;
-
-	childptr = (pid_t *) malloc(sizeof(pid_t));
-	if (!childptr)
-	{
-		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
-		return ;
-	}
 	child = fork();
 	if (child == 0)
 	{
@@ -59,26 +50,12 @@ static void	exec_builtin_child(t_cmd *cmd, t_list **env_list,
 		else
 			exit (run_builtin(env_list, cmd->pathname, cmd->argv));
 	}
-	*childptr = child;
-	if (!add_to_list(child_list, childptr))
-	{
-		free(childptr);
-		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
-	}
+	return (child);
 }
 
-static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
-	t_list **child_list)
+static pid_t	exec_path(t_cmd *cmd, char *cmd_path, char **envp)
 {
 	pid_t	child;
-	pid_t	*childptr;
-
-	childptr = (pid_t *) malloc(sizeof(pid_t));
-	if (!childptr)
-	{
-		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
-		return ;
-	}
 	child = fork();
 	if (child == 0)
 	{
@@ -89,23 +66,20 @@ static void	exec_path(t_cmd *cmd, char *cmd_path, char **envp,
 			print_error(4, "exec: ", cmd->pathname, ": ", strerror(errno));
 		exit(1);
 	}
-	*childptr = child;
-	if (!add_to_list(child_list, childptr))
-	{
-		free(childptr);
-		print_error(4, "exec: ", cmd->pathname, ": ", "malloc error");
-	}
+	return (child);
 }
 
-static void	exec(t_cmd *cmd, t_list	**env_list, t_list **child_list)
+static pid_t	exec(t_cmd *cmd, t_list	**env_list)
 {
 	char	*cmd_path;
 	char	**envp;
+	pid_t	child_pid;
 
 	envp = NULL;
 	cmd_path = NULL;
+	child_pid = 0;
 	if (cmd_is_builtin(cmd->pathname))
-		exec_builtin_child(cmd, env_list, child_list);
+		child_pid = exec_builtin_child(cmd, env_list);
 	else if (ft_strlen(cmd->pathname) > 0 && !ft_isemptystr(cmd->pathname))
 	{
 		cmd_path = expand_path(*env_list, cmd->pathname);
@@ -113,26 +87,29 @@ static void	exec(t_cmd *cmd, t_list	**env_list, t_list **child_list)
 		{
 			print_error(2, "command not found: ", cmd->pathname);
 			g_exit_status = 127;
-			return ;
+			return (child_pid);
 		}
 		envp = env_list_to_array(*env_list);
 		setup_signals_child();
-		exec_path(cmd, cmd_path, envp, child_list);
+		child_pid = exec_path(cmd, cmd_path, envp);
 		if (envp)
 			free_env_array(envp);
 		if (cmd_path)
 			free(cmd_path);
 	}
+	return (child_pid);
 }
 
 void	executor(t_list	**env_list, t_list *cmd_list)
 {
 	t_cmd	*cmd;
-	t_list	*child_list;
+	pid_t	*child_arr;
+	int 	i;
 
 	if (!cmd_list)
 		return ;
-	child_list = NULL;
+	child_arr = (pid_t *)malloc(sizeof(int) * ft_lstsize(cmd_list));
+	i = 0;
 	cmd = cmd_list->content;
 	if (!cmd_list->next && cmd->pathname && cmd_is_builtin(cmd->pathname))
 		g_exit_status = exec_builtin(cmd, env_list);
@@ -142,11 +119,11 @@ void	executor(t_list	**env_list, t_list *cmd_list)
 		{
 			cmd = cmd_list->content;
 			if (cmd->pathname)
-				exec(cmd, env_list, &child_list);
+				child_arr[i] = exec(cmd, env_list);
 			close_redirects(&cmd->write_fd, &cmd->read_fd);
 			cmd_list = cmd_list->next;
+			i++;
 		}
-		wait_children(child_list);
-		ft_lstclear(&child_list, free);
+		wait_children(child_arr, i);
 	}
 }
