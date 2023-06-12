@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/07 20:37:44 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:47:06 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,20 @@ static int	exec_builtin(t_cmd *cmd, t_list	**env_list)
 
 	stdin = dup(STDIN_FILENO);
 	stdout = dup(STDOUT_FILENO);
+	if (stdin == -1 || stdout == -1)
+	{
+		print_error(2, "dup error: ", strerror(errno));
+		return (1);
+	}
 	if (!redirect_streams(cmd->write_fd, cmd->read_fd))
 		ret = 1;
 	else
 		ret = run_builtin(env_list, cmd->pathname, cmd->argv);
-	dup2(stdin, STDIN_FILENO);
-	dup2(stdout, STDOUT_FILENO);
+	if (dup2(stdin, STDIN_FILENO) == -1 || dup2(stdout, STDOUT_FILENO) == -1)
+	{
+		print_error(2, "dup2 error: ", strerror(errno));
+		ret = 1;
+	}
 	close(stdin);
 	close(stdout);
 	return (ret);
