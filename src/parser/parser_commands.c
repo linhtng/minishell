@@ -106,8 +106,6 @@ int	parse_cmds(t_list **token_lst, t_list **commands, t_list **env_list)
 	int		pipe_input;
 
 	token_ptr = *token_lst;
-	if (!((t_token *) token_ptr->content)->string)
-		return (1);
 	pipe_input = 0;
 	if (!save_cmd_lst(commands, *token_lst, pipe_input, env_list))
 		return (0);
