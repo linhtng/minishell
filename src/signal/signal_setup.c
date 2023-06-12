@@ -33,10 +33,19 @@ void	setup_signals(void)
 void	sig_handler_child(int signum)
 {
 	if (signum == SIGINT)
+	{
+		g_exit_status = 130;
 		ft_putstr_fd("\n", 2);
+	}
+	else if (signum == SIGQUIT)
+	{
+		g_exit_status = 131;
+		ft_putstr_fd("Quit: 3\n", 2);
+	}
 }
 
 void	setup_signals_child(void)
 {
 	signal(SIGINT, sig_handler_child);
+	signal(SIGQUIT, sig_handler_child);
 }
