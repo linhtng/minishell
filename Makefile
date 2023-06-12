@@ -6,7 +6,7 @@
 #    By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/07 20:37:43 by jhenriks          #+#    #+#              #
-#    Updated: 2023/06/03 19:30:40 by jhenriks         ###   ########.fr        #
+#    Updated: 2023/06/12 17:12:17 by jhenriks         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SRC += src/parser/parser_commands.c src/parser/parser_commands_utils.c src/parse
 	src/parser/parser_redirects_heredoc.c
 SRC += src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c
 SRC += src/signal/signal.c src/signal/signal_setup.c src/signal/signal_heredoc.c 
-SRC += src/exec/exec.c src/exec/exec_utils.c src/exec/exec_redirect.c
+SRC += src/exec/exec.c src/exec/exec_utils.c src/exec/exec_redirect.c src/exec/exec_children.c
 OBJ = $(SRC:.c=.o)
 HEADERS = include/minishell.h
 

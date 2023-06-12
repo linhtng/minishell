@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 16:28:48 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 17:12:01 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,22 @@ void	wait_children(pid_t *child_arr, int size)
 		else if (WTERMSIG(status) == 11)
 			ft_putstr_fd("Segmentation fault: 11\n", 2);
 		g_exit_status = 128 + WTERMSIG(status);
+	}
+}
+
+void	close_all_redirects(t_cmd *curr_cmd, t_list *cmd_list)
+{
+	t_cmd	*cmd;
+
+	while (cmd_list)
+	{
+		cmd = cmd_list->content;
+		if (cmd == curr_cmd)
+		{
+			cmd_list = cmd_list->next;
+			continue ;
+		}
+		close(cmd->read_fd);
+		cmd_list = cmd_list->next;
 	}
 }

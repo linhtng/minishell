@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:57:07 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 16:22:34 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 17:11:22 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,9 +176,15 @@ int		cmd_is_builtin(char *path);
 int		run_builtin(t_list	**env_list, char *path, char **full_cmd);
 char	*expand_path(t_list *env_list, char *cmd);
 void	wait_children(pid_t *child_arr, int size);
+void	close_all_redirects(t_cmd *curr_cmd, t_list *cmd_list);
 
 /* exec_redirect */
 void	close_redirects(int *write_fd, int *read_fd);
 int		redirect_streams(int write_fd, int read_fd);
+
+/* exec_children */
+int		exec_builtin(t_cmd *cmd, t_list	**env_list);
+pid_t	exec_builtin_child(t_cmd *cmd, t_list **env_list, t_list *cmd_list);
+pid_t	exec_path(t_cmd *cmd, char *cmd_path, char **envp, t_list *cmd_list);
 
 #endif
