@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/05 21:01:18 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/12 20:48:26 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,32 @@ static void	print_full_env(t_list *env_list)
 	}
 }
 
-static void	add_envvar(t_list **env_list, char **var)
+static int	add_envvar(t_list **env_list, char **var, t_list *var_node)
 {
-	t_list	*var_node;
-
-	var_node = find_envvar(env_list, var[0]);
 	if (var[1])
 	{
+		if (!add_to_list(env_list, var))
+		{
+			print_error(2, "export: ", "Error adding variable to list");
+			return (1);
+		}
 		if (var_node)
 			del_envvar(env_list, var_node);
-		ft_lstadd_back(env_list, ft_lstnew(var));
 	}
 	else
 	{
 		if (!var_node)
-			ft_lstadd_back(env_list, ft_lstnew(var));
+		{
+			if (!add_to_list(env_list, var))
+			{
+				print_error(2, "export: ", "Error adding variable to list");
+				return (1);
+			}
+		}
 		else
 			free_envvar(var);
 	}
+	return (0);
 }
 
 // export builtin
@@ -66,7 +74,7 @@ int	export(t_list **env_list, char **args)
 			return (1);
 		}
 		if (check_envvar_name(var[0]))
-			add_envvar(env_list, var);
+			retval = add_envvar(env_list, var, find_envvar(env_list, var[0]));
 		else
 		{
 			print_error(4, "export: ", *args, ": ", "not a valid identifier");
