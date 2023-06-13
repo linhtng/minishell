@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:08:51 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/13 19:38:11 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 20:45:08 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,22 @@ void	wait_children(pid_t *child_arr, int size)
 			g_exit_status = WEXITSTATUS(status);
 		else if (!WIFSIGNALED(status))
 			g_exit_status = status;
+	}
+}
+
+void	close_all_redirects(t_cmd *curr_cmd, t_list *cmd_list)
+{
+	t_cmd	*cmd;
+
+	while (cmd_list)
+	{
+		cmd = cmd_list->content;
+		if (cmd == curr_cmd)
+		{
+			cmd_list = cmd_list->next;
+			continue ;
+		}
+		close(cmd->read_fd);
+		cmd_list = cmd_list->next;
 	}
 }

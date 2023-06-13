@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/13 20:39:42 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 20:45:12 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,21 +123,4 @@ char	*expand_path(t_list *env_list, char *cmd)
 	if (!path)
 		cmd_error(127, cmd);
 	return (path);
-}
-
-void	close_all_redirects(t_cmd *curr_cmd, t_list *cmd_list)
-{
-	t_cmd	*cmd;
-
-	while (cmd_list)
-	{
-		cmd = cmd_list->content;
-		if (cmd == curr_cmd)
-		{
-			cmd_list = cmd_list->next;
-			continue ;
-		}
-		close(cmd->read_fd);
-		cmd_list = cmd_list->next;
-	}
 }
