@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 20:21:50 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 20:48:26 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 17:42:44 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	export(t_list **env_list, char **args)
 			return (1);
 		}
 		if (check_envvar_name(var[0]))
-			retval = add_envvar(env_list, var, find_envvar(env_list, var[0]));
+			retval |= add_envvar(env_list, var, find_envvar(env_list, var[0]));
 		else
 		{
 			print_error(4, "export: ", *args, ": ", "not a valid identifier");
