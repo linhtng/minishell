@@ -59,11 +59,12 @@ static void	exec_cmd_list(t_list **env_list, t_list *cmd_list)
 	{
 		cmd = cmd_list->content;
 		if (cmd->pathname)
-			child_arr[i++] = exec(cmd, env_list, cmd_list);
-		if (child_arr[i - 1] == -1)
-			break ;
+			child_arr[i] = exec(cmd, env_list, cmd_list);
 		close_redirects(&cmd->write_fd, &cmd->read_fd);
 		cmd_list = cmd_list->next;
+		if (child_arr[i] == -1)
+			continue ;
+		i++;
 	}
 	wait_children(child_arr, i);
 	free(child_arr);

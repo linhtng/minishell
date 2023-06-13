@@ -92,13 +92,17 @@ void	wait_children(pid_t *child_arr, int size)
 	i = 0;
 	while (i < size)
 	{
-		waitpid(child_arr[i], &status, 0);
+		if (child_arr[i])
+			waitpid(child_arr[i], &status, 0);
 		i++;
 	}
-	if (WIFEXITED(status))
-		g_exit_status = WEXITSTATUS(status);
-	else if (!WIFSIGNALED(status))
-		g_exit_status = status;
+	if (child_arr[i - 1])
+	{
+		if (WIFEXITED(status))
+			g_exit_status = WEXITSTATUS(status);
+		else if (!WIFSIGNALED(status))
+			g_exit_status = status;
+	}
 }
 
 void	close_all_redirects(t_cmd *curr_cmd, t_list *cmd_list)
