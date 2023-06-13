@@ -57,7 +57,7 @@ int	replace_var_value_heredoc(char **input, char **env_list, int env_len)
 		{
 			if (!expand_str_heredoc(input, var, env_list, env_len))
 				return (0);
-			ptr = *input;
+			ptr = &(*input)[var_index - 1 + env_len];
 		}
 		else
 			ptr = &(*input)[var_index + ft_strlen(env_list[0])];

@@ -59,7 +59,7 @@ int	replace_var_value(t_token *token, char **env_list, int env_len)
 		{
 			if (!get_expanded_str(token, var, env_list, env_len))
 				return (0);
-			ptr = token->string;
+			ptr = &(token->string[var_index - 1 + env_len]);
 		}
 		else
 			ptr = &(token->string[var_index + ft_strlen(env_list[0])]);
