@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:08:51 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 17:22:58 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 19:38:11 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,25 @@ pid_t	exec_path(t_cmd *cmd, char *cmd_path, char **envp, t_list *cmd_list)
 		print_error(5, "exec: ", "error forking child process",
 			cmd->pathname, ": ", strerror(errno));
 	return (child);
+}
+
+void	wait_children(pid_t *child_arr, int size)
+{
+	int		status;
+	int		i;
+
+	i = 0;
+	while (i < size)
+	{
+		if (child_arr[i])
+			waitpid(child_arr[i], &status, 0);
+		i++;
+	}
+	if (child_arr[i - 1])
+	{
+		if (WIFEXITED(status))
+			g_exit_status = WEXITSTATUS(status);
+		else if (!WIFSIGNALED(status))
+			g_exit_status = status;
+	}
 }
