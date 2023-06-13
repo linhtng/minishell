@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 19:28:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/07 18:16:12 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 15:38:20 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	change_dir(t_list **env_list, char *path)
 	char	*old_path;
 	char	*curr_path;
 
+	if (ft_strlen(path) == 0)
+		return (1);
 	old_path = get_curr_dir();
 	if (access(path, F_OK) < 0)
 		print_error(2, "cd: no such file or directory: ", path);
@@ -47,8 +49,6 @@ int	cd(t_list **env_list, char *path)
 
 	if (path)
 	{
-		if (ft_strlen(path) == 0)
-			return (0);
 		if (change_dir(env_list, path))
 			return (0);
 	}
