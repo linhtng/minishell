@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/13 15:06:08 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 20:02:30 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,7 @@ static pid_t	exec(t_cmd *cmd, t_list	**env_list, t_list *cmd_list)
 	{
 		cmd_path = expand_path(*env_list, cmd->pathname);
 		if (!cmd_path)
-		{
-			print_error(2, "command not found: ", cmd->pathname);
-			g_exit_status = 127;
-			return (child_pid);
-		}
+			return (0);
 		envp = env_list_to_array(*env_list);
 		setup_signals_child();
 		child_pid = exec_path(cmd, cmd_path, envp, cmd_list);

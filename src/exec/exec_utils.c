@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:37:05 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/13 19:38:25 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 20:39:42 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,12 @@ int	run_builtin(t_list	**env_list, char *path, char **argv)
 	return (status);
 }
 
-// first checks if the cmd is executable absolute or relative path
-// then tries to find a command from $PATH, checks that it is executable
-// returns the full path as string on success, otherwise returns NULL
-char	*expand_path(t_list *env_list, char *cmd)
+static char	*cmd_from_path(t_list *env_list, char *cmd)
 {
 	char	**path_array;
 	char	*path;
 	int		i;
 
-	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == 0 && access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
 	path_array = ft_split(get_envvar(&env_list, "PATH"), ':');
 	path = NULL;
 	i = 0;
@@ -81,6 +76,52 @@ char	*expand_path(t_list *env_list, char *cmd)
 		free(path_array[i++]);
 	if (path_array)
 		free(path_array);
+	return (path);
+}
+
+static void	cmd_error(int status, char *cmd)
+{
+	if (status == 126)
+	{
+		print_error(2, "permission denied: ", cmd);
+		g_exit_status = 126;
+	}
+	else if (status == 127)
+	{
+		print_error(2, "command not found: ", cmd);
+		g_exit_status = 127;
+	}
+}
+
+// first checks if the cmd is executable absolute or relative path
+// then tries to find a command from $PATH, checks that it is executable
+// returns the full path as string on success, otherwise returns NULL
+char	*expand_path(t_list *env_list, char *cmd)
+{
+	char	*path;
+
+	if (ft_strlen(cmd) == 0 || ft_strncmp(cmd, "..", 3) == 0
+		|| ft_strncmp(cmd, ".", 2) == 0)
+		path = NULL;
+	else if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK) == 0)
+		{
+			if (access(cmd, X_OK) == 0)
+				return (ft_strdup(cmd));
+			else
+			{
+				cmd_error(126, cmd);
+				return (NULL);
+			}
+		}
+		else
+			path = NULL;
+	}
+	else
+		path = cmd_from_path(env_list, cmd);
+	if (!path)
+		cmd_error(127, cmd);
 	return (path);
 }
 
