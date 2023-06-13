@@ -6,7 +6,7 @@
 /*   By: jhenriks <jhenriks@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 21:11:53 by jhenriks          #+#    #+#             */
-/*   Updated: 2023/06/12 20:59:16 by jhenriks         ###   ########.fr       */
+/*   Updated: 2023/06/13 15:06:08 by jhenriks         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static pid_t	exec(t_cmd *cmd, t_list	**env_list, t_list *cmd_list)
 	child_pid = 0;
 	if (cmd_is_builtin(cmd->pathname))
 		child_pid = exec_builtin_child(cmd, env_list, cmd_list);
-	else if (ft_strlen(cmd->pathname) > 0)
+	else
 	{
 		cmd_path = expand_path(*env_list, cmd->pathname);
 		if (!cmd_path)
