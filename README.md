@@ -86,38 +86,37 @@ For us, parsing is the process of turning the list of tokens into a linked list 
 For the above example `"echo "hello  $USER " > file | grep h | cat << eof | cat >> file | echo 'done   $USER'"`, command linked list could be like:
 ```
 cmds:
-	cmd 1:
+	cmd 0:
 		pathname: echo
-		argv: {echo, hello  $USER , NULL}
-		read_fd: 0 (default)
+		argv: {echo, hello  expandedUser, NULL}
+		read_fd: STDIN_FILENO
+		write_fd: pipe0[1]
+	cmd 1:
+		pathname: grep
+		argv: {grep, h, NULL}
+		read_fd: pipe0[0] (read output of previous command)
 		write_fd: pipe1[1]
 	cmd 2:
-		infile: pipe1[0] (read output of previous command)
-		outfile: pipe2[1]
-		path: grep
-		argv: {grep, h, NULL}
+		pathname: cat
+		argv: {cat, NULL}
+		read_fd: pipe1[0]
+		write_fd: pipe2[1]
 	cmd 3:
-		infile: pipe2[0] (read output of previous command)
-		outfile: pipe3[1]
 		path: cat
 		argv: {cat, NULL}
+		read_fd: pipe2[0]
+		write_fd: pipe3[1]
 	cmd 4:
-		infile: pipe3[0] (read output of previous command)
-		outfile: fd[3] i.e. fd corresponding to the open file 'file'
-		path: cat
-		argv: {cat, NULL}
-	cmd 5:
-		infile: fd[3] (read output of previous command)
-		outfile: 1
 		path: echo
-		argv: {echo, done   $USER, NULL}
+		argv: {echo, done   expandedUser, NULL}
+		read_fd: pipe3[0]
+		write_fd: STDOUT_FILENO
 ```
-
 
 ### Executor
 With all our data properly on our structs, the ``executer`` has all the necessary information to execute commands. For this part we use separate processess to execute either our builtins or other commands inside child processes that redirect ``stdin`` and ``stdout`` just like on pipex.
 
-In cases of error, we must return the correct exit code: https://tldp.org/LDP/abs/html/exitcodes.html
+In cases of error, we must return the correct [exit code](https://tldp.org/LDP/abs/html/exitcodes.html).
 
 ### Built-in commands
 - `echo` prints arguments followed by newline, with option `-n` prints arguments without a newline
@@ -130,7 +129,7 @@ In cases of error, we must return the correct exit code: https://tldp.org/LDP/ab
 
 ### Control characters (Ctrl + key)
 
-The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` and `SIGQUIT` signals from terminal. Detecting `Ctrl-D` input is still a mystery 😧
+The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` and `SIGQUIT` signals from terminal. Detecting `Ctrl-D` is to simply check if input is NULL.
 
 ##### When prompt is active:
 `Ctrl-C` should display empty prompt in a new line
@@ -145,3 +144,22 @@ The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` an
 `Ctrl-D` sends EOF marker to the subprocess (there is no UNIX signal for this, but sending EOT character to the subprocess via STDIN seems to be enough: https://askubuntu.com/questions/724990/what-is-eof-and-how-to-trigger-it)
 
 `Ctrl-\` sends SIGQUIT to the subprocess, exit code should be `131`
+
+## Installation
+### Clone the repository and run minishell:
+``` 
+git clone https://github.com/linhtng/minishell.git
+cd minishell
+make
+./minishell
+```
+As this project is made to mimic bash, you can try any commands you normally would try in bash, except for the ones using ";" or "\".
+
+## Summary
+
+This is my first pair-coding project, which for me was an amazing experience. What I think we did well was dividing up the different parts of the project while also supporting each other when we ran into issues, and we documented our progress after each working day. I learnt a lot about collaborating using Github and communication with teammate in general. IMO, the hardest part of this project was handling all the edge cases, which keep coming to you once you closed your eyes ready to go to bed :D. It took us 2 retries to pass this project, but we certainly learn a lot and had fun!
+
+## References
+* [minishell - 42 Docs](https://harm-smits.github.io/42docs/projects/minishell)
+* [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+* [Writing Your Own Shell](https://www.cs.purdue.edu/homes/grr/SystemsProgrammingBook/Book/Chapter5-WritingYourOwnShell.pdf)
