@@ -159,6 +159,8 @@ As this project is made to mimic bash, you can try any commands you normally wou
 
 This is my first pair-coding project, which for me was an amazing experience. What I think we did well was dividing up the different parts of the project while also supporting each other when we ran into issues, and we documented our progress after each working day. I learnt a lot about collaborating using Github and communication with teammate in general. IMO, the hardest part of this project was handling all the edge cases, which keep coming to you once you closed your eyes ready to go to bed :D. It took us 2 retries to pass this project, but we certainly learn a lot and had fun!
 
+<img width="241" alt="image" src="https://github.com/linhtng/minishell/blob/master/Brain%20Before%20Sleep%20Meme.png">
+
 ## References
 * [minishell - 42 Docs](https://harm-smits.github.io/42docs/projects/minishell)
 * [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
