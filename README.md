@@ -157,7 +157,7 @@ As this project is made to mimic bash, you can try any commands you normally wou
 
 ## Summary
 
-This is my first pair-coding project, which for me was an amazing experience. What I think we did well was dividing up the different parts of the project while also supporting each other when we ran into issues, and we documented our progress after each working day. I learnt a lot about collaborating using Github and communication with teammate in general. IMO, the hardest part of this project was handling all the edge cases, which keep coming to you once you closed your eyes ready to go to bed :D. It took us 2 retries to pass this project, but we certainly learn a lot and had fun!
+This is my first pair-coding project, which for me was an amazing experience. What I think we did well was dividing up the different parts of the project while also supporting each other when we ran into issues, and we documented our progress after each working day. I learnt a lot about collaborating using Github and communication with teammate in general. IMO, the hardest part of this project was handling all the edge cases, which keep coming to you once you closed your eyes ready to go to bed 😂 It took us 2 retries to pass this project, but we certainly learn a lot while having fun and achieving shell-growth! I mean self-growth! Ok, I'll see myself out.
 
 <img width="241" alt="image" src="https://github.com/linhtng/minishell/blob/master/Brain%20Before%20Sleep%20Meme.png">
 
