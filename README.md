@@ -12,7 +12,7 @@
 	<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/linhtng/minishell?color=green" />
 </p>
 <p align="center">
-	<img src="mnshe.gif" width="750" height="100"/>
+	<img src="mnshe.gif" width="750" />
 </p>
 
 
