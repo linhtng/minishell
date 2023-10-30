@@ -161,10 +161,17 @@ The `Ctrl-C` and `Ctrl-\` key inputs can be detected by listening to `SIGINT` an
 `Ctrl-\` sends SIGQUIT to the subprocess, exit code should be `131`
 
 ## Installation
-### Clone the repository and run minishell:
+### Clone the repository:
 ``` 
 git clone https://github.com/linhtng/minishell.git
 cd minishell
+```
+Note for MacOS: to install a recent version of readline, you need to use homebrew
+```
+brew install readline
+```
+Run minishell
+```
 make
 ./minishell
 ```
